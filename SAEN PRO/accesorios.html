@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accesorios y Joyas - SAEN IMPORT</title>
+  <meta name="description" content="SAEN IMPORT - Accesorios y Joyas. Productos importados de calidad con precios unitarios y mayoristas desde 3 unidades. Huánuco, Perú."/>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Josefin+Sans:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <span><i class="fas fa-map-marker-alt"></i> Jr. 2 de Mayo 485, Huánuco</span>
+    <span><i class="fab fa-whatsapp"></i> 987494580 &nbsp;|&nbsp; 924829159</span>
+    <span><i class="fas fa-clock"></i> Lun–Dom: 9:00am–8:30pm</span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><i class="fas fa-globe"></i></div>
+      <div class="logo-text">
+        <span class="logo-main">SAEN</span>
+        <span class="logo-sub">IMPORT</span>
+        <span class="logo-slogan">Siente la diferencia, importa la experiencia</span>
+      </div>
+    </a>
+    <div class="search-wrapper">
+      <form class="search-form" onsubmit="handleSearch(event)">
+        <input type="text" id="searchInput" class="search-input" placeholder="Buscar productos o categorías..." autocomplete="off"/>
+        <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+      </form>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+    <nav class="header-actions">
+      <a href="https://wa.me/51987494580" target="_blank" class="action-btn wa-btn">
+        <i class="fab fa-whatsapp"></i><span>WhatsApp</span>
+      </a>
+      <button class="action-btn cart-btn" onclick="openCart()" title="Ver pedido">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" style="display:none;">0</span>
+      </button>
+      <button class="menu-toggle" onclick="toggleMobMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="mob-overlay" id="mobOverlay" onclick="closeMobMenu()"></div>
+<nav class="mob-menu" id="mobMenu">
+  <div class="mob-menu-hdr">
+    <span>MENÚ</span>
+    <button onclick="closeMobMenu()"><i class="fas fa-times"></i></button>
+  </div>
+  <ul id="mobileNav"></ul>
+</nav>
+
+<!-- MAIN NAV -->
+<nav class="main-nav" id="mainNav">
+  <div class="nav-inner" id="navInner">
+    <ul class="nav-list" id="desktopNav"></ul>
+  </div>
+</nav>
+
+<!-- SECTION PRODUCTO (llenada por app.js) -->
+<section class="products-section" id="catSection" style="padding-top:60px;">
+  <div class="sec-inner">
+    <div class="sec-hdr">
+      <div class="sec-cat-icon ic-blue"><i class="fas fa-box"></i></div>
+      <span class="sec-tag tg-blue">Categoría</span>
+      <h2 class="sec-title">Accesorios y Joyas</h2>
+      <p class="sec-desc">Cargando productos...</p>
+    </div>
+    <div class="products-grid" id="catGrid"></div>
+    <div class="sec-cta">
+      <a href="#" target="_blank" class="btn-ver-mas">
+        <i class="fab fa-whatsapp"></i> Ver más por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- RESEÑAS INTERACTIVAS -->
+<section class="reviews-section" id="reviewsSection">
+  <!-- llenado por app.js -->
+</section>
+
+<!-- PROMO MINI -->
+<section class="promo-banner" style="padding:50px 24px;">
+  <div class="promo-inner">
+    <div class="promo-content">
+      <span class="promo-tag-pill">SAEN IMPORT 2026</span>
+      <h2>Precio mayorista desde 3 unidades</h2>
+      <p>Somos SAEN IMPORT, te ofrecemos la mejor experiencia en venta mayorista de productos importados. ¡Contáctanos para precios especiales!</p>
+      <a href="https://wa.me/51987494580?text=Hola%20SAEN%20IMPORT%2C%20quiero%20precios%20al%20por%20mayor" target="_blank" class="btn-promo">
+        <i class="fab fa-whatsapp"></i> Consultar precios al por mayor
+      </a>
+    </div>
+    <div class="promo-icons">
+      <div class="promo-float-icon pfi1"><i class="fas fa-tag"></i></div>
+      <div class="promo-float-icon pfi2"><i class="fas fa-boxes-stacked"></i></div>
+      <div class="promo-float-icon pfi3"><i class="fas fa-truck-fast"></i></div>
+      <div class="promo-float-icon pfi4"><i class="fab fa-whatsapp"></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo">
+          <div class="logo-icon"><i class="fas fa-globe"></i></div>
+          <div class="logo-text"><span class="logo-main">SAEN</span><span class="logo-sub">IMPORT</span></div>
+        </a>
+        <p>Siente la diferencia, importa la experiencia. Venta mayorista y minorista de productos importados en Huánuco, Perú.</p>
+        <div class="footer-social">
+          <a href="https://wa.me/51987494580" target="_blank" class="soc-btn wa"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" class="soc-btn fb"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="soc-btn ig"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="soc-btn tt"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Categorías</h4>
+        <ul>
+          <li><a href="accesorios.html"><i class="fas fa-gem"></i> Accesorios y Joyas</a></li>
+          <li><a href="cuidado.html"><i class="fas fa-spa"></i> Cuidado Personal</a></li>
+          <li><a href="higiene.html"><i class="fas fa-soap"></i> Higiene y Limpieza</a></li>
+          <li><a href="mochilas.html"><i class="fas fa-shopping-bag"></i> Mochilas y Carteras</a></li>
+          <li><a href="novedades.html"><i class="fas fa-star"></i> Novedades</a></li>
+          <li><a href="perfumes.html"><i class="fas fa-spray-can-sparkles"></i> Perfumes y Colonias</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Más Categorías</h4>
+        <ul>
+          <li><a href="cocina.html"><i class="fas fa-utensils"></i> Cocina</a></li>
+          <li><a href="juguetes.html"><i class="fas fa-gamepad"></i> Juguetes</a></li>
+          <li><a href="escolar.html"><i class="fas fa-book"></i> Escolar</a></li>
+          <li><a href="maquillaje.html"><i class="fas fa-paint-brush"></i> Maquillaje</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contacto</h4>
+        <ul>
+          <li><i class="fab fa-whatsapp"></i> 987494580</li>
+          <li><i class="fab fa-whatsapp"></i> 924829159</li>
+          <li><i class="fas fa-map-marker-alt"></i> Jr. 2 de Mayo 485, Huánuco</li>
+          <li><i class="fab fa-instagram"></i> @saenimpot</li>
+          <li><i class="fas fa-clock"></i> Lun–Dom: 9am–7pm</li>
+        </ul>
+        <a href="https://wa.me/51987494580" target="_blank" class="footer-wa-btn"><i class="fab fa-whatsapp"></i> Contactar Ahora</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <p>&copy; 2026 SAEN IMPORT. Todos los derechos reservados.</p>
+      <p>Siente la diferencia, importa la experiencia <i class="fas fa-heart" style="color:var(--red-light);"></i></p>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING WA -->
+<a href="https://wa.me/51987494580?text=Hola%20SAEN%20IMPORT%2C%20me%20interesa%20un%20producto" target="_blank" class="wa-float">
+  <i class="fab fa-whatsapp"></i><span class="wa-tooltip">¡Escríbenos!</span>
+</a>
+<button class="back-top" id="backTop" onclick="scrollToTop()"><i class="fas fa-chevron-up"></i></button>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="sov-box">
+    <div class="sov-hdr">
+      <h3><i class="fas fa-search"></i> Resultados de búsqueda</h3>
+      <button onclick="closeSearchOverlay()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="sov-results" id="sovResults"></div>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-hdr">
+    <h3><i class="fas fa-shopping-cart"></i> Mi Pedido</h3>
+    <button onclick="closeCart()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cart-items" id="cartBody"></div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total del pedido:</span>
+      <strong id="cartTotal">S/ 0.00</strong>
+    </div>
+    <button class="btn-wa-cart" onclick="sendCartWA()">
+      <i class="fab fa-whatsapp"></i> Enviar pedido por WhatsApp
+    </button>
+    <button class="btn-clear-cart" onclick="clearCart()">
+      <i class="fas fa-trash"></i> Vaciar pedido
+    </button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="datos-empresa.js"></script>
+<script src="datos-accesorios.js"></script>
+<script src="datos-cuidado.js"></script>
+<script src="datos-higiene.js"></script>
+<script src="datos-mochilas.js"></script>
+<script src="datos-novedades.js"></script>
+<script src="datos-cocina.js"></script>
+<script src="datos-juguetes.js"></script>
+<script src="datos-escolar.js"></script>
+<script src="datos-maquillaje.js"></script>
+<script src="datos-perfume.js"></script>
+<script src="datos-loader.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
