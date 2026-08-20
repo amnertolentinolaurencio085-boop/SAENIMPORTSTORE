@@ -1302,3 +1302,553 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
     font-size: 0.58rem;
   }
 }
+/* =========================
+   MODO OSCURO
+========================= */
+
+.dark-toggle {
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.dark-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* Fondo general */
+body.dark-mode {
+  background: #0b1220;
+  color: #f8fafc;
+}
+
+/* Header */
+body.dark-mode .header {
+  background: #111827;
+  border-bottom-color: #263244;
+}
+
+/* Buscador */
+body.dark-mode .search-form {
+  background: #1f2937;
+}
+
+body.dark-mode .search-input {
+  background: #1f2937;
+  color: #ffffff;
+  border-color: #374151;
+}
+
+body.dark-mode .search-input::placeholder {
+  color: #9ca3af;
+}
+
+body.dark-mode .search-btn {
+  color: #ffffff;
+}
+
+/* Navegación */
+body.dark-mode .main-nav {
+  background: #0f172a;
+}
+
+body.dark-mode .nav-list a {
+  color: #e5e7eb;
+}
+
+/* Secciones principales */
+body.dark-mode .cats-section,
+body.dark-mode .testi-section,
+body.dark-mode .reviews-section {
+  background: #0b1220;
+}
+
+/* Textos */
+body.dark-mode .sec-title,
+body.dark-mode .testi-text,
+body.dark-mode .testi-author strong {
+  color: #f8fafc;
+}
+
+body.dark-mode .sec-desc,
+body.dark-mode .testi-author span {
+  color: #cbd5e1;
+}
+
+/* Tarjetas */
+body.dark-mode .cat-card,
+body.dark-mode .product-card,
+body.dark-mode .testi-card {
+  background: #111827;
+  color: #f8fafc;
+  border-color: #263244;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* Features */
+body.dark-mode .features-bar {
+  background: #111827;
+  border-color: #263244;
+}
+
+body.dark-mode .feature-item {
+  color: #f8fafc;
+}
+
+body.dark-mode .feat-txt span {
+  color: #cbd5e1;
+}
+
+/* Resultados de búsqueda */
+body.dark-mode .search-results {
+  background: #111827;
+  color: #ffffff;
+  border-color: #263244;
+}
+
+/* Carrito */
+body.dark-mode .cart-panel {
+  background: #111827;
+  color: #ffffff;
+}
+
+body.dark-mode .cart-hdr,
+body.dark-mode .cart-footer {
+  background: #111827;
+  border-color: #263244;
+}
+
+body.dark-mode .cart-items {
+  background: #0f172a;
+}
+
+/* Menú móvil */
+body.dark-mode .mob-menu {
+  background: #111827;
+  color: #ffffff;
+}
+
+body.dark-mode .mob-menu-hdr {
+  border-color: #263244;
+}
+
+/* Botón modo oscuro */
+body.dark-mode .dark-toggle {
+  background: #f8fafc;
+  color: #111827;
+}
+
+/* Footer */
+body.dark-mode .footer {
+  background: #020617;
+}
+
+/* Botón volver arriba */
+body.dark-mode .back-top {
+  background: #111827;
+  color: #ffffff;
+}
+/* =========================
+   AJUSTE DE TEXTOS EN MODO OSCURO
+========================= */
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: #f8fafc;
+}
+
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode li {
+  color: #dbe4f0;
+}
+
+body.dark-mode a {
+  color: #e5e7eb;
+}
+
+body.dark-mode .sec-title,
+body.dark-mode .cat-title,
+body.dark-mode .product-title,
+body.dark-mode .product-name,
+body.dark-mode .review-title,
+body.dark-mode .testi-author strong {
+  color: #ffffff;
+}
+
+body.dark-mode .sec-desc,
+body.dark-mode .cat-desc,
+body.dark-mode .product-desc,
+body.dark-mode .review-text,
+body.dark-mode .testi-text,
+body.dark-mode .testi-author span {
+  color: #cbd5e1;
+}
+
+/* Mantener destacados en dorado */
+body.dark-mode .sec-tag,
+body.dark-mode .logo-main,
+body.dark-mode .logo-sub {
+  color: var(--gold);
+}
+
+/* Links del menú */
+body.dark-mode .nav-list a,
+body.dark-mode .footer-links a,
+body.dark-mode .mob-menu a {
+  color: #e5e7eb;
+}
+
+body.dark-mode .nav-list a:hover,
+body.dark-mode .footer-links a:hover,
+body.dark-mode .mob-menu a:hover {
+  color: var(--gold);
+}
+/* =========================
+   AJUSTES EXTRA MODO OSCURO
+   SERVICIOS + PRECIOS
+========================= */
+
+/* Barra de servicios */
+body.dark-mode .features-bar {
+  background: #0f172a;
+  border-top: 1px solid #263244;
+  border-bottom: 1px solid #263244;
+}
+
+body.dark-mode .feature-item {
+  background: #111827;
+  border-color: #263244;
+}
+
+body.dark-mode .feat-icon {
+  color: var(--gold);
+}
+
+body.dark-mode .feat-txt strong {
+  color: #ffffff;
+}
+
+body.dark-mode .feat-txt span {
+  color: #94a3b8;
+}
+
+/* Precios de productos */
+body.dark-mode .product-price,
+body.dark-mode .price-box,
+body.dark-mode .price-unit,
+body.dark-mode .price-wholesale,
+body.dark-mode .price-card {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+/* Texto del precio unitario */
+body.dark-mode .price-unit,
+body.dark-mode .unit-price,
+body.dark-mode .precio-unitario {
+  color: #e2e8f0;
+}
+
+/* Texto del precio mayorista */
+body.dark-mode .price-wholesale,
+body.dark-mode .wholesale-price,
+body.dark-mode .precio-mayorista {
+  color: #facc15;
+}
+
+/* Etiquetas tipo "Unidad" y "Mayor" */
+body.dark-mode .price-label,
+body.dark-mode .unit-label,
+body.dark-mode .wholesale-label {
+  color: #94a3b8;
+}
+
+/* Números de precio */
+body.dark-mode .product-price strong,
+body.dark-mode .price-box strong,
+body.dark-mode .price-unit strong,
+body.dark-mode .price-wholesale strong {
+  color: #ffffff;
+}
+
+/* Evitar cajas blancas dentro de tarjetas */
+body.dark-mode .product-card .price-box,
+body.dark-mode .product-card .product-price {
+  background: #111827;
+}
+/* MODO CLARO */
+.product-card .price-label,
+.product-card .price-title,
+.product-card .price-caption {
+  color: #9ca3af;
+}
+
+/* MODO OSCURO */
+body.dark-mode .product-card .price-label,
+body.dark-mode .product-card .price-title,
+body.dark-mode .product-card .price-caption {
+  color: #000000;
+}
+/* TEXTO DE ETIQUETAS DE PRECIO */
+
+/* Modo claro */
+.pr-label {
+  color: #9ca3af !important;
+}
+
+/* Modo oscuro */
+body.dark-mode .pr-label {
+  color: #111827 !important;
+}
+/* =========================
+   QUICK VIEW - MODO OSCURO
+========================= */
+
+/* Fondo principal del modal */
+body.dark-mode .qv-box,
+body.dark-mode .qv-main,
+body.dark-mode .qv-info,
+body.dark-mode .qv-suggestions {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+/* Nombre y descripción */
+body.dark-mode .qv-name {
+  color: #ffffff;
+}
+
+body.dark-mode .qv-desc {
+  color: #cbd5e1;
+}
+
+/* Categoría */
+body.dark-mode .qv-cat {
+  color: #94a3b8;
+}
+
+/* Estrellas y reseñas */
+body.dark-mode .qv-stars {
+  color: #fbbf24;
+}
+
+body.dark-mode .qv-stars span {
+  color: #94a3b8;
+}
+
+/* Filas de precio dentro del modal */
+body.dark-mode .qv-prices .price-row {
+  background: #f8fafc;
+  border-color: #dbe3ee;
+}
+
+/* Texto de etiquetas de precio */
+body.dark-mode .qv-prices .pr-label {
+  color: #0f172a !important;
+}
+
+/* Número del precio */
+body.dark-mode .qv-prices .pr-val {
+  color: #0b3b91 !important;
+}
+
+/* Sugerencias */
+body.dark-mode .qv-suggestions h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .qv-sugg-count {
+  color: #94a3b8;
+}
+
+/* Tarjetas sugeridas */
+body.dark-mode .qv-sugg-card {
+  background: #111827;
+  border-color: #334155;
+}
+
+body.dark-mode .qv-sugg-info {
+  background: #111827;
+}
+
+body.dark-mode .qv-sugg-name {
+  color: #e5e7eb;
+}
+
+body.dark-mode .qv-sugg-price {
+  color: #f8fafc;
+}
+
+/* Botón cerrar del modal */
+body.dark-mode .qv-close {
+  background: #111827;
+  color: #ffffff;
+}
+
+/* Texto "Ver imagen" */
+body.dark-mode .qv-zoom-hint {
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+}
+/* ==================================
+   HERO MÓVIL - TEXTO A LA IZQUIERDA
+   Y PRODUCTO LIBRE A LA DERECHA
+================================== */
+
+@media (max-width: 768px) {
+
+  .hero {
+    height: 315px;
+    min-height: 315px;
+    aspect-ratio: auto;
+    overflow: hidden;
+  }
+
+  .hero-slide {
+    height: 315px;
+    min-height: 315px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+  }
+
+  .hero-banner-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    /* Mueve ligeramente la imagen hacia la derecha */
+    object-position: 62% center;
+  }
+
+  /* Degradado oscuro solo en la zona izquierda */
+  .hero-slide.has-banner::before {
+    background: linear-gradient(
+      90deg,
+      rgba(0, 18, 51, 0.95) 0%,
+      rgba(0, 18, 51, 0.82) 22%,
+      rgba(0, 18, 51, 0.45) 38%,
+      rgba(0, 18, 51, 0.12) 52%,
+      transparent 67%
+    );
+  }
+
+  /* Contenido del texto */
+  .hero-content {
+    position: relative;
+    z-index: 5;
+
+    width: 42%;
+    max-width: 185px;
+
+    margin-left: 16%;
+    margin-top: -5px;
+
+    text-align: left;
+  }
+
+  .hero-tag {
+    font-size: 0.48rem;
+    padding: 4px 8px;
+    margin-bottom: 6px;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+  }
+
+  .hero-title {
+    font-size: 1.18rem;
+    line-height: 1.05;
+    margin-bottom: 7px;
+  }
+
+  .hero-desc {
+    font-size: 0.62rem;
+    line-height: 1.3;
+    margin-bottom: 11px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .btn-hero-p,
+  .btn-hero-s {
+    padding: 8px 10px;
+    font-size: 0.58rem;
+    white-space: nowrap;
+  }
+
+  .slider-prev,
+  .slider-next {
+    width: 34px;
+    height: 34px;
+    z-index: 20;
+  }
+
+  .slider-prev {
+    left: 8px;
+  }
+
+  .slider-next {
+    right: 8px;
+  }
+
+  .slider-dots {
+    bottom: 10px;
+  }
+}
+
+/* CELULARES PEQUEÑOS */
+@media (max-width: 480px) {
+
+  .hero {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .hero-slide {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .hero-banner-image {
+    object-position: 64% center;
+  }
+
+  .hero-content {
+    width: 44%;
+    max-width: 170px;
+
+    /* Esta es la zona que marcaste */
+    margin-left: 14%;
+  }
+
+  .hero-title {
+    font-size: 1.08rem;
+  }
+
+  .hero-desc {
+    font-size: 0.59rem;
+  }
+
+  .btn-hero-p,
+  .btn-hero-s {
+    padding: 7px 9px;
+    font-size: 0.55rem;
+  }
+}

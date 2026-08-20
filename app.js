@@ -1295,3 +1295,52 @@ document.addEventListener('keydown', e => {
     document.getElementById('searchResults')?.classList.remove('active');
   }
 });
+/* =========================
+   MODO OSCURO
+========================= */
+
+function applySavedTheme() {
+  const savedTheme = localStorage.getItem("saenTheme");
+  const darkIcon = document.getElementById("darkIcon");
+
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+
+    if (darkIcon) {
+      darkIcon.classList.remove("fa-moon");
+      darkIcon.classList.add("fa-sun");
+    }
+  } else {
+    document.body.classList.remove("dark-mode");
+
+    if (darkIcon) {
+      darkIcon.classList.remove("fa-sun");
+      darkIcon.classList.add("fa-moon");
+    }
+  }
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+
+  const isDark = document.body.classList.contains("dark-mode");
+  const darkIcon = document.getElementById("darkIcon");
+
+  if (isDark) {
+    localStorage.setItem("saenTheme", "dark");
+
+    if (darkIcon) {
+      darkIcon.classList.remove("fa-moon");
+      darkIcon.classList.add("fa-sun");
+    }
+  } else {
+    localStorage.setItem("saenTheme", "light");
+
+    if (darkIcon) {
+      darkIcon.classList.remove("fa-sun");
+      darkIcon.classList.add("fa-moon");
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", applySavedTheme);

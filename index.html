@@ -23,33 +23,100 @@
 <!-- HEADER -->
 <header class="header" id="header">
   <div class="header-inner">
+
+    <!-- LOGO -->
     <a href="index.html" class="logo">
-      <div class="logo-icon"><i class="fas fa-globe"></i></div>
+      <div class="logo-icon">
+        <i class="fas fa-globe"></i>
+      </div>
+
       <div class="logo-text">
         <span class="logo-main">SAEN</span>
         <span class="logo-sub">IMPORT</span>
-        <span class="logo-slogan">Siente la diferencia, importa la experiencia</span>
+        <span class="logo-slogan">
+          Siente la diferencia, importa la experiencia
+        </span>
       </div>
     </a>
+
+    <!-- BUSCADOR -->
     <div class="search-wrapper">
       <form class="search-form" onsubmit="handleSearch(event)">
-        <input type="text" id="searchInput" class="search-input" placeholder="Buscar productos o categorías..." autocomplete="off"/>
-        <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Buscar productos o categorías..."
+          autocomplete="off"
+        />
+
+        <button
+          type="submit"
+          class="search-btn"
+          title="Buscar"
+          aria-label="Buscar"
+        >
+          <i class="fas fa-search"></i>
+        </button>
       </form>
+
       <div class="search-results" id="searchResults"></div>
     </div>
+
+    <!-- ACCIONES DEL HEADER -->
     <nav class="header-actions">
-      <a href="https://wa.me/51987494580" target="_blank" class="action-btn wa-btn">
-        <i class="fab fa-whatsapp"></i><span>WhatsApp</span>
+
+      <!-- WHATSAPP -->
+      <a
+        href="https://wa.me/51987494580"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="action-btn wa-btn"
+        title="Contactar por WhatsApp"
+      >
+        <i class="fab fa-whatsapp"></i>
+        <span>WhatsApp</span>
       </a>
-      <button class="action-btn cart-btn" onclick="openCart()" title="Ver pedido">
+
+      <!-- CARRITO -->
+      <button
+        type="button"
+        class="action-btn cart-btn"
+        onclick="openCart()"
+        title="Ver pedido"
+        aria-label="Ver pedido"
+      >
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-count" style="display:none;">0</span>
       </button>
-      <button class="menu-toggle" onclick="toggleMobMenu()">
-        <span></span><span></span><span></span>
+
+      <!-- MODO OSCURO -->
+      <button
+        type="button"
+        class="action-btn dark-toggle"
+        id="darkToggle"
+        onclick="toggleDarkMode()"
+        title="Cambiar modo"
+        aria-label="Cambiar entre modo claro y oscuro"
+      >
+        <i class="fas fa-moon" id="darkIcon"></i>
       </button>
+
+      <!-- MENÚ MÓVIL -->
+      <button
+        type="button"
+        class="menu-toggle"
+        onclick="toggleMobMenu()"
+        title="Abrir menú"
+        aria-label="Abrir menú"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
     </nav>
+
   </div>
 </header>
 
