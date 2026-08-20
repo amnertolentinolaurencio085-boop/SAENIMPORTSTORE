@@ -1,22 +1,22 @@
-/* ================================================
-   SAEN IMPORT — datos-juguetes.js
-   Categoría: Juguetes
+﻿/* ================================================
+   SAEN IMPORT â€” datos-juguetes.js
+   CategorÃ­a: Juguetes
    Para agregar un producto, copia un bloque
-   existente, cambia el "id" (debe ser único
-   en TODO el catálogo) y ajusta los campos.
+   existente, cambia el "id" (debe ser Ãºnico
+   en TODO el catÃ¡logo) y ajusta los campos.
 
-   TIPOS DE PRECIO válidos:
-     "Unidad"  → precio por 1 pieza
-     "Mayor"   → precio x3 Unidades en adelante
-     "Docena"  → precio por 12 Unidades
-     "Ciento"  → precio por 100 Unidades
-     "Tira"    → precio por tira (tú defines cantidad)
-     "Paquete" → precio por paquete (tú defines cantidad)
-     "Caja"    → precio por caja (tú defines cantidad)
-     "Oferta"  → ej: label:"2x1", valor: precio especial
+   TIPOS DE PRECIO vÃ¡lidos:
+     "Unidad"  â†’ precio por 1 pieza
+     "Mayor"   â†’ precio x3 Unidades en adelante
+     "Docena"  â†’ precio por 12 Unidades
+     "Ciento"  â†’ precio por 100 Unidades
+     "Tira"    â†’ precio por tira (tÃº defines cantidad)
+     "Paquete" â†’ precio por paquete (tÃº defines cantidad)
+     "Caja"    â†’ precio por caja (tÃº defines cantidad)
+     "Oferta"  â†’ ej: label:"2x1", valor: precio especial
 
-   BADGES válidos: "NUEVO" | "HOT" | "OFERTA" | "VIRAL" | ""
-   ESTADO válidos: "disponible" | "agotado"
+   BADGES vÃ¡lidos: "NUEVO" | "HOT" | "OFERTA" | "VIRAL" | ""
+   ESTADO vÃ¡lidos: "disponible" | "agotado"
    ================================================ */
 
 const PRODS_JUGUETES = [
@@ -25,7 +25,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "BURBUJA",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG001.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG001.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -41,7 +41,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "DOG FUNNY",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG002.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG002.png",
     "badge": "Nuevo",
     "estado": "disponible",
     "descuento": 0,
@@ -57,7 +57,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "LEGO YUMBO",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG003.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG003.png",
     "badge": "Top Ventas",
     "estado": "disponible",
     "descuento": 0,
@@ -71,9 +71,9 @@ const PRODS_JUGUETES = [
   {
     "id": "JUG004",
     "categoria": "juguetes",
-    "nombre": "FELIZ CUMPLEAÑOS",
+    "nombre": "FELIZ CUMPLEAÃ‘OS",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG004.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG004.png",
     "badge": "Oferta",
     "estado": "disponible",
     "descuento": 0,
@@ -90,7 +90,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "MOLDES PARA PLASTILINA 202-11",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG005.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG005.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -104,9 +104,9 @@ const PRODS_JUGUETES = [
   {
     "id": "JUG006",
     "categoria": "juguetes",
-    "nombre": "MUÑECA BABY DOLL EN CAJA",
+    "nombre": "MUÃ‘ECA BABY DOLL EN CAJA",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG006.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG006.png",
     "badge": "Top Ventas",
     "estado": "disponible",
     "descuento": 0,
@@ -122,7 +122,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CARRO CONSTRUCTOR MEZCLADORA YH118",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG007.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG007.png",
     "badge": "Nuevo",
     "estado": "disponible",
     "descuento": 0,
@@ -138,7 +138,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CARRON A METAL DEPORTIVO",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG008.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG008.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -154,7 +154,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CAMIONETA METAL BOTA HUMO",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG009.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG009.png",
     "badge": "Oferta",
     "estado": "disponible",
     "descuento": 0,
@@ -168,9 +168,9 @@ const PRODS_JUGUETES = [
   {
     "id": "JUG010",
     "categoria": "juguetes",
-    "nombre": "DECORACIÓN FELIZ CUMPLEAÑOS",
-    "descripcion": "DISPONIBLE EN TODOS LOS COLORES Y DISEÑOS",
-    "imagen": "IMAGENES JUGUETES/IMGJUG010.PNG",
+    "nombre": "DECORACIÃ“N FELIZ CUMPLEAÃ‘OS",
+    "descripcion": "DISPONIBLE EN TODOS LOS COLORES Y DISEÃ‘OS",
+    "imagen": "IMAGENES JUGUETES/IMGJUG010.png",
     "badge": "Nuevo",
     "estado": "disponible",
     "descuento": 0,
@@ -186,7 +186,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "HELICOPTERO A CONTROL REMOTO JYX",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG011.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG011.png",
     "badge": "Top Ventas",
     "estado": "disponible",
     "descuento": 0,
@@ -202,7 +202,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "JUEGO DE MESA CHESS GAMES",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG012.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG012.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -218,7 +218,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "TUN TUN VOLADOR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG013.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG013.png",
     "badge": "Nuevo",
     "estado": "disponible",
     "descuento": 0,
@@ -232,9 +232,9 @@ const PRODS_JUGUETES = [
   {
     "id": "JUG014",
     "categoria": "juguetes",
-    "nombre": "CORTINAS DE CUMPLEAÑOS",
+    "nombre": "CORTINAS DE CUMPLEAÃ‘OS",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG014.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG014.png",
     "badge": "Oferta",
     "estado": "disponible",
     "descuento": 0,
@@ -250,7 +250,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "VELA X3",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG015.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG015.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -266,7 +266,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "PULPO SQUID",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG016.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG016.png",
     "badge": "Top Ventas",
     "estado": "disponible",
     "descuento": 0,
@@ -282,7 +282,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "HUEVO SORPRESA TRALALA",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG017.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG017.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -298,7 +298,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "VARITA DE PRINCESA",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG018.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG018.png",
     "badge": "Nuevo",
     "estado": "disponible",
     "descuento": 0,
@@ -315,7 +315,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CHOCOLATE CAMISA 80GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG019.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG019.png",
     "badge": "Oferta",
     "estado": "disponible",
     "descuento": 0,
@@ -331,7 +331,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CHOCOLATE PERFUME 40GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG020.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG020.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -345,9 +345,9 @@ const PRODS_JUGUETES = [
   {
     "id": "JUG021",
     "categoria": "juguetes",
-    "nombre": "CHOCOLATE CORAZÓN 80GR",
+    "nombre": "CHOCOLATE CORAZÃ“N 80GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG021.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG021.png",
     "badge": "Top Ventas",
     "estado": "disponible",
     "descuento": 0,
@@ -361,9 +361,9 @@ const PRODS_JUGUETES = [
   {
     "id": "JUG022",
     "categoria": "juguetes",
-    "nombre": "CHOCOLATE GRADUACIÓN 100GR",
+    "nombre": "CHOCOLATE GRADUACIÃ“N 100GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG022.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG022.png",
     "badge": "Nuevo",
     "estado": "disponible",
     "descuento": 0,
@@ -379,7 +379,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "BURRO PARA MONTAR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG023.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG023.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -395,7 +395,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CHOCOLATE CARTERA 100GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG024.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG024.png",
     "badge": "Oferta",
     "estado": "disponible",
     "descuento": 0,
@@ -411,7 +411,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CHOCOLATE CAJA INGLESA 100GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG025.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG025.png",
     "badge": "Top Ventas",
     "estado": "disponible",
     "descuento": 0,
@@ -427,7 +427,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "INFLADOR DE GLOBO",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG026.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG026.png",
     "badge": "Nuevo",
     "estado": "disponible",
     "descuento": 0,
@@ -443,7 +443,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "HUEVO DINOSARIO",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG027.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG027.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -459,7 +459,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CHOCOLATE VESTIDO 80GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG028.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG028.png",
     "badge": "Oferta",
     "estado": "disponible",
     "descuento": 0,
@@ -475,7 +475,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CHOCOLATE CAJA GRANDE 150GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG029.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG029.png",
     "badge": "Top Ventas",
     "estado": "disponible",
     "descuento": 0,
@@ -491,7 +491,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "CHOCOLATE CAJA MEDIANA 80GR",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG030.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG030.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -507,7 +507,7 @@ const PRODS_JUGUETES = [
     "categoria": "juguetes",
     "nombre": "TRAILER DE METAL",
     "descripcion": "",
-    "imagen": "IMAGENES JUGUETES/IMGJUG031.PNG",
+    "imagen": "IMAGENES JUGUETES/IMGJUG031.png",
     "badge": "Nuevo",
     "estado": "disponible",
     "descuento": 0,
@@ -519,3 +519,4 @@ const PRODS_JUGUETES = [
     ]
   }
 ];
+

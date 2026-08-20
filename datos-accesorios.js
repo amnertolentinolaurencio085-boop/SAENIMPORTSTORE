@@ -1,22 +1,22 @@
-/* ================================================
-   SAEN IMPORT — datos-accesorios.js
-   Categoría: Accesorios y Joyas
+﻿/* ================================================
+   SAEN IMPORT â€” datos-accesorios.js
+   CategorÃ­a: Accesorios y Joyas
    Para agregar un producto, copia un bloque
-   existente, cambia el "id" (debe ser único
-   en TODO el catálogo) y ajusta los campos.
+   existente, cambia el "id" (debe ser Ãºnico
+   en TODO el catÃ¡logo) y ajusta los campos.
 
-   TIPOS DE PRECIO válidos:
-     "Unidad"  → precio por 1 pieza
-     "Mayor"   → precio x3 Unidades en adelante
-     "Docena"  → precio por 12 Unidades
-     "Ciento"  → precio por 100 Unidades
-     "Tira"    → precio por tira (tú defines cantidad)
-     "Paquete" → precio por paquete (tú defines cantidad)
-     "Caja"    → precio por caja (tú defines cantidad)
-     "Oferta"  → ej: label:"2x1", valor: precio especial
+   TIPOS DE PRECIO vÃ¡lidos:
+     "Unidad"  â†’ precio por 1 pieza
+     "Mayor"   â†’ precio x3 Unidades en adelante
+     "Docena"  â†’ precio por 12 Unidades
+     "Ciento"  â†’ precio por 100 Unidades
+     "Tira"    â†’ precio por tira (tÃº defines cantidad)
+     "Paquete" â†’ precio por paquete (tÃº defines cantidad)
+     "Caja"    â†’ precio por caja (tÃº defines cantidad)
+     "Oferta"  â†’ ej: label:"2x1", valor: precio especial
 
-   BADGES válidos: "NUEVO" | "HOT" | "OFERTA" | "VIRAL" | ""
-   ESTADO válidos: "disponible" | "agotado"
+   BADGES vÃ¡lidos: "NUEVO" | "HOT" | "OFERTA" | "VIRAL" | ""
+   ESTADO vÃ¡lidos: "disponible" | "agotado"
    ================================================ */
 
 const PRODS_ACCESORIOS = [
@@ -25,7 +25,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "CEPILLO DE BAMBU",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC001.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC001.png",
     "badge": "Destacado",
     "estado": "disponible",
     "descuento": 0,
@@ -41,7 +41,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "PEDRERIA PARA CABELLO HAIR CHARMS",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC002.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC002.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -57,7 +57,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "CEPILLO MP 32025",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC003.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC003.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -73,7 +73,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "SET DE LIGAS MAS ESPONJA Y GANCHITOS",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC004.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC004.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -89,7 +89,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "COLET EN TUBO KD-3390",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC005.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC005.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -105,7 +105,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "PULSERA PANDORA SE1221",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC006.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC006.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -121,7 +121,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "ARETE COLGADO SE1280",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC007.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC007.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -137,7 +137,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "PULSERA DE PERLAS ANKLET SE1448",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC008.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC008.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -153,7 +153,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "ARETE PEGADO SE1279",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC009.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC009.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -169,7 +169,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "SET PARA CABELLO PLANCHA MAS RIZADOR EP-9880",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC010.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC010.png",
     "badge": "Popular",
     "estado": "disponible",
     "descuento": 0,
@@ -185,7 +185,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "COLET LIGA AJ420208",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC011.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC011.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -199,9 +199,9 @@ const PRODS_ACCESORIOS = [
   {
     "id": "JOY012",
     "categoria": "accesorios",
-    "nombre": "COLET X2 CON DISEÑO KD-3539",
+    "nombre": "COLET X2 CON DISEÃ‘O KD-3539",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC012.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC012.png",
     "badge": "Oferta",
     "estado": "disponible",
     "descuento": 0,
@@ -217,7 +217,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "COLET DE COLORES KD-3546",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC013.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC013.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -233,7 +233,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "GANCHO NEGRO PARA CABELLO SC1020 SC1183",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC014.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC014.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -249,7 +249,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "SET DE PEINE Y ESPEJO AKOYA KD-2815",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC015.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC015.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -265,7 +265,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "GANCHO PIEL DE DURAZNO EP-2794",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC016.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC016.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -281,7 +281,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "COLET DE LIGAS GEMAS KD-3256",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC017.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC017.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -297,7 +297,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "GANCHO PERLAS X3 GEMAS EP-2753",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC018.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC018.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -313,7 +313,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "MINI SECADORA KD1025",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC019.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC019.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -329,7 +329,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "ARETE X6 3345",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC020.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC020.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -345,7 +345,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "LAZO CORTO SC1896",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC021.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC021.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -361,7 +361,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "COLET CON RAYAS",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC022.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC022.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -378,7 +378,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "GANCHO FLORES",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC023.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC023.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -394,7 +394,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "LIGAS DE CABELLO COLORES",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC024.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC024.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -410,7 +410,7 @@ const PRODS_ACCESORIOS = [
     "categoria": "accesorios",
     "nombre": "LIGAS NEGRAS EN TUBO",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC025.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC025.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -424,9 +424,9 @@ const PRODS_ACCESORIOS = [
   {
     "id": "JOY026",
     "categoria": "accesorios",
-    "nombre": "ANILLO DE NIÑOS LOZAN",
+    "nombre": "ANILLO DE NIÃ‘OS LOZAN",
     "descripcion": "",
-    "imagen": "IMAGENES ACCESORIOS/IMGACC026.PNG",
+    "imagen": "IMAGENES ACCESORIOS/IMGACC026.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,

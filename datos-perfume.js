@@ -1,22 +1,22 @@
-/* ================================================
-   SAEN IMPORT — datos-novedades.js
-   Categoría: Novedades
+﻿/* ================================================
+   SAEN IMPORT â€” datos-novedades.js
+   CategorÃ­a: Novedades
    Para agregar un producto, copia un bloque
-   existente, cambia el "id" (debe ser único
-   en TODO el catálogo) y ajusta los campos.
+   existente, cambia el "id" (debe ser Ãºnico
+   en TODO el catÃ¡logo) y ajusta los campos.
 
-   TIPOS DE PRECIO válidos:
-     "Unidad"  → precio por 1 pieza
-     "Mayor"   → precio x3 Unidades en adelante
-     "Docena"  → precio por 12 Unidades
-     "Ciento"  → precio por 100 Unidades
-     "Tira"    → precio por tira (tú defines cantidad)
-     "Paquete" → precio por paquete (tú defines cantidad)
-     "Caja"    → precio por caja (tú defines cantidad)
-     "Oferta"  → ej: label:"2x1", valor: precio especial
+   TIPOS DE PRECIO vÃ¡lidos:
+     "Unidad"  â†’ precio por 1 pieza
+     "Mayor"   â†’ precio x3 Unidades en adelante
+     "Docena"  â†’ precio por 12 Unidades
+     "Ciento"  â†’ precio por 100 Unidades
+     "Tira"    â†’ precio por tira (tÃº defines cantidad)
+     "Paquete" â†’ precio por paquete (tÃº defines cantidad)
+     "Caja"    â†’ precio por caja (tÃº defines cantidad)
+     "Oferta"  â†’ ej: label:"2x1", valor: precio especial
 
-   BADGES válidos: "NUEVO" | "HOT" | "OFERTA" | "VIRAL" | ""
-   ESTADO válidos: "disponible" | "agotado"
+   BADGES vÃ¡lidos: "NUEVO" | "HOT" | "OFERTA" | "VIRAL" | ""
+   ESTADO vÃ¡lidos: "disponible" | "agotado"
    ================================================ */
 
 const PRODS_PERFUMES = [
@@ -25,7 +25,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "PERFUME TACO MISSY G.G PW",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER001.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER001.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -45,7 +45,7 @@ const PRODS_PERFUMES = [
   {
     "id": "PER002",
     "categoria": "perfumes",
-    "nombre": "COLONIA ARABE 20 AÑOS DE ANIVERSARIO",
+    "nombre": "COLONIA ARABE 20 AÃ‘OS DE ANIVERSARIO",
     "descripcion": "",
     "imagen": "IMAGENES PERFUME/IMGPER002.png",
     "badge": "",
@@ -69,7 +69,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "COLONIA HELADO",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER003.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER003.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -91,7 +91,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "COLONIA YARA ARABE PARA MUJER CORONA",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER004.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER004.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -113,7 +113,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "PERFUME ARABE YARA ASAD CY53",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER005.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER005.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -135,7 +135,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "PERFUME PARA MUJER PW PARFUM WOMAN ROJO BLANCO",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER006.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER006.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -155,9 +155,9 @@ const PRODS_PERFUMES = [
   {
     "id": "PER007",
     "categoria": "perfumes",
-    "nombre": "PERFUME ECORINCIA DE NIÑO MAS LLAVERO",
+    "nombre": "PERFUME ECORINCIA DE NIÃ‘O MAS LLAVERO",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER007.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER007.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -177,9 +177,9 @@ const PRODS_PERFUMES = [
   {
     "id": "PER008",
     "categoria": "perfumes",
-    "nombre": "PERFUME ECORINCIA DE NIÑO MAS LLAVERO",
+    "nombre": "PERFUME ECORINCIA DE NIÃ‘O MAS LLAVERO",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER008.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER008.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -201,7 +201,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "PERFUME ECORINCIA DE DAMA CEP-61 E0270-85",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER009.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER009.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -223,7 +223,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "PERFUME ECORINCIA DE DAMA CEP-61 E0270-85",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER010.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER010.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -245,7 +245,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "FEROMONA VARON Y MUJER",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER011.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER011.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -267,7 +267,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "PERFUME MUJER",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER012.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER012.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -289,7 +289,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "KIT DE PERFUME V.V.LOVE VL3801-1",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER013.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER013.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -311,7 +311,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "KIT DE PERFUME V.V.LOVE VL3801-1",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER014.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER014.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -333,7 +333,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "KIT DE PERFUME V.V.LOVE VL3801-1",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER015.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER015.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
@@ -355,7 +355,7 @@ const PRODS_PERFUMES = [
     "categoria": "perfumes",
     "nombre": "PERFUME MINI ONLYOU OLU830-7",
     "descripcion": "",
-    "imagen": "IMAGENES PERFUME/IMGPER016.PNG",
+    "imagen": "IMAGENES PERFUME/IMGPER016.png",
     "badge": "",
     "estado": "disponible",
     "descuento": 0,
