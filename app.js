@@ -16,6 +16,8 @@
 let DATA     = null;
 let CART     = [];
 let PAGE_CAT = null;
+let ANALYTICS_CLIENT = null;
+const TRACKED_PRODUCT_VIEWS = new Set();
 
 /* ── Colores por categoría ── */
 const CAT_COLOR = {
@@ -501,6 +503,7 @@ function closeImageLightbox() {
 function openQuickView(pid) {
   const p = DATA.productos.find(x => x.id === pid);
   if (!p) return;
+  trackProductInterest(pid, 'vista');
   renderQuickView(p);
   document.getElementById('qvOverlay')?.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1372,8 +1375,18 @@ function initRevealObserver() {
 function consultWA(pid) {
   const prod = DATA.productos.find(p => p.id === pid);
   if (!prod) return;
+  trackProductInterest(pid, 'whatsapp');
   const msg = encodeURIComponent(`Hola SAEN IMPORT! 👋\nMe interesa el producto: *${prod.nombre}*\n¿Me pueden dar información sobre precio, disponibilidad y envío? Gracias! 🛍️`);
   window.open(`https://wa.me/${DATA.empresa.telefono1}?text=${msg}`, '_blank');
+}
+function trackProductInterest(sku, type) {
+  if (type === 'vista' && TRACKED_PRODUCT_VIEWS.has(sku)) return;
+  const cfg = window.SAEN_SUPABASE || {};
+  if (!window.supabase || !cfg.url || !cfg.anonKey) return;
+  if (type === 'vista') TRACKED_PRODUCT_VIEWS.add(sku);
+  ANALYTICS_CLIENT ||= window.supabase.createClient(cfg.url, cfg.anonKey);
+  ANALYTICS_CLIENT.rpc('registrar_consulta',{p_sku:sku,p_tipo:type})
+    .then(({error}) => { if (error) console.debug('Métrica no registrada:', error.message); });
 }
 function showToast(html) {
   const t = document.getElementById('toast');

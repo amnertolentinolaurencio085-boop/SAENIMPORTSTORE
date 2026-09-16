@@ -51,6 +51,7 @@
   }
 
   function showOrders() {
+    $('dashboardMain').hidden = true;
     $('productsMain').hidden = true;
     $('ordersMain').hidden = false;
     setActive($('ordersLink'));
@@ -59,6 +60,7 @@
   }
 
   function showProducts() {
+    $('dashboardMain').hidden = true;
     $('ordersMain').hidden = true;
     $('productsMain').hidden = false;
     setActive($('productsLink'));

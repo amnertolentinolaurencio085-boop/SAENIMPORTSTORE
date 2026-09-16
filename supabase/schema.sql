@@ -230,6 +230,33 @@ end $$;
 revoke all on function public.cambiar_estado_pedido(uuid,text) from public;
 grant execute on function public.cambiar_estado_pedido(uuid,text) to authenticated;
 
+-- Métricas anónimas del catálogo para el dashboard. Solo se guarda el SKU
+-- consultado y un contador; no se almacenan IP, cookies ni datos personales.
+create table if not exists public.producto_metricas (
+  sku text primary key references public.catalogo_productos(sku) on update cascade on delete cascade,
+  consultas bigint not null default 0 check (consultas >= 0),
+  whatsapp_clicks bigint not null default 0 check (whatsapp_clicks >= 0),
+  updated_at timestamptz not null default now()
+);
+alter table public.producto_metricas enable row level security;
+drop policy if exists "admins leen metricas" on public.producto_metricas;
+create policy "admins leen metricas" on public.producto_metricas for select to authenticated
+using (public.is_admin());
+
+create or replace function public.registrar_consulta(p_sku text,p_tipo text default 'vista')
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not exists(select 1 from public.catalogo_productos where sku=p_sku and visible=true and estado<>'oculto') then return; end if;
+  insert into public.producto_metricas(sku,consultas,whatsapp_clicks)
+  values(p_sku,case when p_tipo='vista' then 1 else 0 end,case when p_tipo='whatsapp' then 1 else 0 end)
+  on conflict(sku) do update set
+    consultas=producto_metricas.consultas + case when p_tipo='vista' then 1 else 0 end,
+    whatsapp_clicks=producto_metricas.whatsapp_clicks + case when p_tipo='whatsapp' then 1 else 0 end,
+    updated_at=now();
+end $$;
+revoke all on function public.registrar_consulta(text,text) from public;
+grant execute on function public.registrar_consulta(text,text) to anon,authenticated;
+
 insert into storage.buckets (id,name,public,file_size_limit,allowed_mime_types)
 values ('productos','productos',true,5242880,array['image/jpeg','image/png','image/webp'])
 on conflict (id) do update set public=true,file_size_limit=5242880,allowed_mime_types=array['image/jpeg','image/png','image/webp'];

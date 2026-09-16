@@ -62,3 +62,17 @@ El flujo queda así:
 5. `enviado` y `entregado` no vuelven a descontar. Si un pedido confirmado se marca `cancelado`, el stock se devuelve automáticamente.
 
 No cambies manualmente `stock_aplicado`: esa protección evita descuentos duplicados.
+
+## 7. Dashboard administrativo
+
+El mismo `supabase/schema.sql` crea `producto_metricas` y la función `registrar_consulta`. La tienda registra únicamente contadores por SKU cuando un visitante abre un producto o pulsa consultar por WhatsApp; no guarda IP, cookies ni información personal del visitante.
+
+El Dashboard muestra:
+
+- Total de ventas confirmadas, enviadas o entregadas.
+- Pedidos registrados durante el día.
+- Productos agotados.
+- Cantidad de clientes únicos por teléfono.
+- Productos más consultados y clics en WhatsApp.
+- Clientes frecuentes según número de pedidos y monto acumulado.
+- Los cinco pedidos más recientes.
