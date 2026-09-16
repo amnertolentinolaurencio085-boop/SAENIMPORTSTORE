@@ -17,6 +17,7 @@ let DATA     = null;
 let CART     = [];
 let PAGE_CAT = null;
 let ANALYTICS_CLIENT = null;
+let CUSTOMER_CLIENT = null;
 const TRACKED_PRODUCT_VIEWS = new Set();
 
 /* ── Colores por categoría ── */
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadData();
   detectPage();
   initCart();
+  await initCustomerAccount();
   initNav();
   initSearch();
   initScroll();
@@ -706,6 +708,40 @@ function initCheckoutFields() {
   document.getElementById('orderCity').value = saved.ciudad || '';
 }
 
+async function initCustomerAccount() {
+  const actions = document.querySelector('.header-actions');
+  const cfg = window.SAEN_SUPABASE || {};
+  if (!actions || document.getElementById('customerAccountLink')) return;
+  const link = document.createElement('a');
+  link.id = 'customerAccountLink';
+  link.className = 'action-btn account-btn';
+  link.href = 'cliente-login.html';
+  link.title = 'Ingresar o crear cuenta';
+  link.innerHTML = '<i class="far fa-user"></i><span>Ingresar</span>';
+  const cart = actions.querySelector('.cart-btn');
+  actions.insertBefore(link, cart || actions.firstChild);
+  if (!window.supabase || !cfg.url || !cfg.anonKey) return;
+  CUSTOMER_CLIENT = window.supabase.createClient(cfg.url,cfg.anonKey);
+  const {data:{session}} = await CUSTOMER_CLIENT.auth.getSession();
+  if (!session) return;
+  const {data:isAdmin} = await CUSTOMER_CLIENT.rpc('is_admin');
+  if (isAdmin) {
+    link.href = 'admin.html';
+    link.title = 'Abrir panel administrador';
+    link.querySelector('span').textContent = 'Panel';
+    return;
+  }
+  link.href = 'mi-cuenta.html';
+  link.title = 'Abrir mi cuenta';
+  link.querySelector('span').textContent = 'Mi cuenta';
+  const {data:profile} = await CUSTOMER_CLIENT.from('cliente_perfiles').select('nombre,telefono,ciudad').eq('user_id',session.user.id).maybeSingle();
+  if (!profile) return;
+  const name=document.getElementById('orderName'),phone=document.getElementById('orderPhone'),city=document.getElementById('orderCity');
+  if (name && !name.value) name.value=profile.nombre||'';
+  if (phone && !phone.value) phone.value=profile.telefono||'';
+  if (city && !city.value) city.value=profile.ciudad||'';
+}
+
 /* Toast de bienvenida si hay carrito guardado */
 function showCartWelcomeToast() {
   if (CART.length > 0) {
@@ -981,7 +1017,7 @@ async function sendCartWA() {
   const button = document.querySelector('.cart-footer .btn-wa-cart');
   if (button) button.disabled = true;
   const waWindow = window.open('', '_blank');
-  const orderClient = window.supabase.createClient(cfg.url, cfg.anonKey);
+  const orderClient = CUSTOMER_CLIENT || window.supabase.createClient(cfg.url, cfg.anonKey);
   const rpcItems = CART.map(item => ({sku:item.pid,tipo:item.tipo,cantidad:item.qty}));
   let order;
   try {

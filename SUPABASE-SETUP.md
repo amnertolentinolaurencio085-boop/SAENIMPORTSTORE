@@ -76,3 +76,13 @@ El Dashboard muestra:
 - Productos más consultados y clics en WhatsApp.
 - Clientes frecuentes según número de pedidos y monto acumulado.
 - Los cinco pedidos más recientes.
+
+## 8. Cuentas de clientes
+
+- La tienda muestra **Ingresar** en el encabezado.
+- El registro solicita nombre, teléfono, ciudad, correo y contraseña.
+- Supabase exige confirmar el correo antes del primer ingreso.
+- Los pedidos realizados con la sesión iniciada aparecen en **Mi cuenta**.
+- La compra sin cuenta continúa disponible.
+
+La migración específica está en `supabase/customer-accounts.sql`. En **Authentication > URL Configuration**, usa `https://saenimport.com` como Site URL y permite `https://saenimport.com/mi-cuenta.html` como Redirect URL.

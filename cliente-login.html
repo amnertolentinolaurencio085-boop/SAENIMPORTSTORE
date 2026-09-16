@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ingresar o registrarse | SAEN IMPORT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="cliente-auth.css?v=account1">
+</head>
+<body class="customer-auth-page">
+  <main class="customer-auth-shell">
+    <section class="customer-auth-brand">
+      <a href="index.html"><img src="saen-logo-admin.png" alt="SAEN IMPORT"></a>
+      <p class="auth-eyebrow">TU CUENTA SAEN IMPORT</p>
+      <h1>Compra fácil y sigue tus pedidos.</h1>
+      <p>Guarda tus datos y consulta el estado de tus compras desde cualquier dispositivo.</p>
+      <ul><li><i class="fas fa-check"></i> Pedidos organizados</li><li><i class="fas fa-check"></i> Datos guardados</li><li><i class="fas fa-check"></i> Compra sin cuenta todavía disponible</li></ul>
+    </section>
+    <section class="customer-auth-card">
+      <div class="auth-tabs"><button class="active" id="loginTab" type="button">Iniciar sesión</button><button id="registerTab" type="button">Crear cuenta</button></div>
+      <form id="customerLoginForm" class="auth-form">
+        <div><p class="auth-eyebrow">BIENVENIDO</p><h2>Inicia sesión</h2><p>Consulta tus pedidos y datos guardados.</p></div>
+        <label>Correo electrónico<div class="auth-input"><i class="far fa-envelope"></i><input id="loginEmail" type="email" autocomplete="email" required placeholder="tu@correo.com"></div></label>
+        <label>Contraseña<div class="auth-input"><i class="fas fa-lock"></i><input id="loginPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="••••••••"></div></label>
+        <p class="auth-message" id="loginMessage" role="alert"></p>
+        <button class="auth-primary" type="submit">Ingresar a mi cuenta</button>
+      </form>
+      <form id="customerRegisterForm" class="auth-form" hidden>
+        <div><p class="auth-eyebrow">NUEVO CLIENTE</p><h2>Crea tu cuenta</h2><p>Completa tus datos para comenzar.</p></div>
+        <label>Nombre completo<div class="auth-input"><i class="far fa-user"></i><input id="registerName" autocomplete="name" required minlength="2" maxlength="100" placeholder="Tu nombre"></div></label>
+        <div class="auth-grid"><label>Teléfono<div class="auth-input"><i class="fas fa-phone"></i><input id="registerPhone" inputmode="tel" autocomplete="tel" required minlength="6" maxlength="25" placeholder="987 654 321"></div></label><label>Ciudad<div class="auth-input"><i class="fas fa-location-dot"></i><input id="registerCity" autocomplete="address-level2" maxlength="80" placeholder="Huánuco"></div></label></div>
+        <label>Correo electrónico<div class="auth-input"><i class="far fa-envelope"></i><input id="registerEmail" type="email" autocomplete="email" required placeholder="tu@correo.com"></div></label>
+        <div class="auth-grid"><label>Contraseña<div class="auth-input"><i class="fas fa-lock"></i><input id="registerPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="Mínimo 8 caracteres"></div></label><label>Confirmar<div class="auth-input"><i class="fas fa-lock"></i><input id="registerConfirm" type="password" autocomplete="new-password" required minlength="8" placeholder="Repite tu contraseña"></div></label></div>
+        <p class="auth-message" id="registerMessage" role="alert"></p>
+        <button class="auth-primary" type="submit">Crear mi cuenta</button>
+      </form>
+      <a class="auth-back" href="index.html"><i class="fas fa-arrow-left"></i> Volver a la tienda</a>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="cliente-auth.js?v=account1"></script>
+</body>
+</html>

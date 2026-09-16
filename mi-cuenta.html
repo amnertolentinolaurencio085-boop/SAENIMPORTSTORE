@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mi cuenta | SAEN IMPORT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="cliente-auth.css?v=account1">
+</head>
+<body class="customer-account-page">
+  <header class="account-header"><a href="index.html"><img src="saen-logo-admin.png" alt="SAEN IMPORT"></a><div><a href="index.html"><i class="fas fa-store"></i> Volver a la tienda</a><button id="customerLogout"><i class="fas fa-right-from-bracket"></i> Cerrar sesión</button></div></header>
+  <main class="account-shell">
+    <section class="account-welcome"><div><p class="auth-eyebrow">MI CUENTA</p><h1>Hola, <span id="accountName">cliente</span></h1><p id="accountEmail">Cargando información…</p></div><span class="account-avatar" id="accountAvatar">C</span></section>
+    <section class="account-grid">
+      <article class="account-card profile-card"><header><div><p class="auth-eyebrow">MIS DATOS</p><h2>Información personal</h2></div><i class="far fa-address-card"></i></header><form id="profileForm"><label>Nombre completo<input id="profileName" required minlength="2" maxlength="100"></label><label>Teléfono<input id="profilePhone" required minlength="6" maxlength="25" inputmode="tel"></label><label>Ciudad o distrito<input id="profileCity" maxlength="80"></label><p class="auth-message" id="profileMessage"></p><button class="auth-primary" type="submit">Guardar cambios</button></form></article>
+      <article class="account-card orders-card"><header><div><p class="auth-eyebrow">MIS COMPRAS</p><h2>Historial de pedidos</h2></div><i class="fas fa-bag-shopping"></i></header><div id="customerOrders" class="customer-orders"><p class="account-empty">Cargando pedidos…</p></div></article>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="mi-cuenta.js?v=account1"></script>
+</body>
+</html>

@@ -71,6 +71,39 @@ end $$;
 revoke all on function public.next_product_sku(text) from public;
 grant execute on function public.next_product_sku(text) to authenticated;
 
+-- Cuentas de clientes. El perfil se crea automáticamente al registrarse
+-- y cada cliente solo puede leer o editar sus propios datos.
+create table if not exists public.cliente_perfiles (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  nombre text not null default '',
+  telefono text not null default '',
+  ciudad text not null default '',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.cliente_perfiles enable row level security;
+drop policy if exists "clientes leen su perfil" on public.cliente_perfiles;
+create policy "clientes leen su perfil" on public.cliente_perfiles for select to authenticated
+using (auth.uid()=user_id or public.is_admin());
+drop policy if exists "clientes crean su perfil" on public.cliente_perfiles;
+create policy "clientes crean su perfil" on public.cliente_perfiles for insert to authenticated
+with check (auth.uid()=user_id);
+drop policy if exists "clientes actualizan su perfil" on public.cliente_perfiles;
+create policy "clientes actualizan su perfil" on public.cliente_perfiles for update to authenticated
+using (auth.uid()=user_id) with check (auth.uid()=user_id);
+
+create or replace function public.crear_perfil_cliente()
+returns trigger language plpgsql security definer set search_path=public as $$
+begin
+  insert into public.cliente_perfiles(user_id,nombre,telefono,ciudad)
+  values(new.id,coalesce(new.raw_user_meta_data->>'nombre',''),coalesce(new.raw_user_meta_data->>'telefono',''),coalesce(new.raw_user_meta_data->>'ciudad',''))
+  on conflict(user_id) do nothing;
+  return new;
+end $$;
+drop trigger if exists crear_perfil_cliente_al_registrarse on auth.users;
+create trigger crear_perfil_cliente_al_registrarse after insert on auth.users
+for each row execute function public.crear_perfil_cliente();
+
 -- Pedidos: se registran antes de abrir WhatsApp. El stock se descuenta
 -- una sola vez cuando el administrador confirma la venta.
 create table if not exists public.pedidos (
@@ -89,6 +122,7 @@ create table if not exists public.pedidos (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+alter table public.pedidos add column if not exists cliente_user_id uuid references auth.users(id) on delete set null;
 
 create table if not exists public.pedido_items (
   id uuid primary key default gen_random_uuid(),
@@ -104,6 +138,7 @@ create table if not exists public.pedido_items (
 );
 
 create index if not exists pedidos_estado_created_idx on public.pedidos(estado, created_at desc);
+create index if not exists pedidos_cliente_user_idx on public.pedidos(cliente_user_id, created_at desc);
 create index if not exists pedido_items_pedido_idx on public.pedido_items(pedido_id);
 alter table public.pedidos enable row level security;
 alter table public.pedido_items enable row level security;
@@ -111,9 +146,15 @@ alter table public.pedido_items enable row level security;
 drop policy if exists "admins leen pedidos" on public.pedidos;
 create policy "admins leen pedidos" on public.pedidos for select to authenticated
 using (public.is_admin());
+drop policy if exists "clientes leen sus pedidos" on public.pedidos;
+create policy "clientes leen sus pedidos" on public.pedidos for select to authenticated
+using (cliente_user_id=auth.uid());
 drop policy if exists "admins leen items" on public.pedido_items;
 create policy "admins leen items" on public.pedido_items for select to authenticated
 using (public.is_admin());
+drop policy if exists "clientes leen items de sus pedidos" on public.pedido_items;
+create policy "clientes leen items de sus pedidos" on public.pedido_items for select to authenticated
+using (exists(select 1 from public.pedidos where pedidos.id=pedido_items.pedido_id and pedidos.cliente_user_id=auth.uid()));
 
 create or replace function public.crear_pedido(
   p_cliente_nombre text,
@@ -144,8 +185,14 @@ begin
     raise exception 'El pedido está vacío';
   end if;
 
-  insert into public.pedidos(cliente_nombre,telefono,ciudad,notas)
-  values (trim(p_cliente_nombre),trim(p_telefono),trim(coalesce(p_ciudad,'')),trim(coalesce(p_notas,'')))
+  if auth.uid() is not null then
+    insert into public.cliente_perfiles(user_id,nombre,telefono,ciudad,updated_at)
+    values(auth.uid(),trim(p_cliente_nombre),trim(p_telefono),trim(coalesce(p_ciudad,'')),now())
+    on conflict(user_id) do update set nombre=excluded.nombre,telefono=excluded.telefono,ciudad=excluded.ciudad,updated_at=now();
+  end if;
+
+  insert into public.pedidos(cliente_nombre,telefono,ciudad,notas,cliente_user_id)
+  values (trim(p_cliente_nombre),trim(p_telefono),trim(coalesce(p_ciudad,'')),trim(coalesce(p_notas,'')),auth.uid())
   returning id,codigo into v_pedido_id,v_codigo;
 
   for v_item in select value from jsonb_array_elements(p_items)
