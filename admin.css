@@ -49,3 +49,22 @@
   .admin-page .admin-shell{margin-left:290px}
   .admin-page .top-header{height:88px}
 }
+
+/* Pedidos e inventario */
+.admin-page [hidden]{display:none!important}
+.admin-page .sidebar .nav-count{margin-left:auto;min-width:22px;height:22px;padding:0 6px;border-radius:12px;background:#ef3340;color:#fff;display:inline-grid;place-items:center;font-size:11px}
+.admin-page .orders-main{min-height:calc(100vh - 88px)}
+.admin-page .orders-table{min-width:980px}
+.admin-page .orders-table td{vertical-align:top}
+.admin-page .orders-table td strong,.admin-page .orders-table td small{display:block}
+.admin-page .orders-table td small{margin-top:4px;color:#77839a}
+.admin-page .order-products{min-width:230px;line-height:1.45}
+.admin-page .stock-deducted{color:#15966b!important;font-weight:700}
+.admin-page .order-status{min-width:125px;border:1px solid #dce2ec;border-radius:20px;padding:8px 12px;font-weight:750;text-transform:capitalize;background:#fff;color:#24324a}
+.admin-page .order-status.status-nuevo{background:#fff3d8;color:#9a6200;border-color:#f2d38d}
+.admin-page .order-status.status-confirmado{background:#e8f1ff;color:#1558a5;border-color:#b9d2f4}
+.admin-page .order-status.status-enviado{background:#eeeaff;color:#5d42a5;border-color:#cfc4f0}
+.admin-page .order-status.status-entregado{background:#e5f7ef;color:#137a55;border-color:#afe0ca}
+.admin-page .order-status.status-cancelado{background:#fff0f1;color:#b4232e;border-color:#f2bdc1}
+.admin-page .orders-main .stats-row article{background:rgba(255,255,255,.96)}
+@media(max-width:600px){.admin-page .orders-main .page-hero{align-items:flex-start}.admin-page .orders-main .page-hero .secondary-btn{width:100%;margin-top:12px}}

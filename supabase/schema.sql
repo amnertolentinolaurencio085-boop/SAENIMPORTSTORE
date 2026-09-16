@@ -71,6 +71,165 @@ end $$;
 revoke all on function public.next_product_sku(text) from public;
 grant execute on function public.next_product_sku(text) to authenticated;
 
+-- Pedidos: se registran antes de abrir WhatsApp. El stock se descuenta
+-- una sola vez cuando el administrador confirma la venta.
+create table if not exists public.pedidos (
+  id uuid primary key default gen_random_uuid(),
+  codigo text not null unique default ('SAE-' || upper(substr(replace(gen_random_uuid()::text,'-',''),1,8))),
+  cliente_nombre text not null check (length(trim(cliente_nombre)) between 2 and 100),
+  telefono text not null check (length(trim(telefono)) between 6 and 25),
+  ciudad text not null default '',
+  notas text not null default '',
+  total numeric(12,2) not null default 0 check (total >= 0),
+  estado text not null default 'nuevo' check (estado in ('nuevo','confirmado','enviado','entregado','cancelado')),
+  stock_aplicado boolean not null default false,
+  confirmado_at timestamptz,
+  enviado_at timestamptz,
+  entregado_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.pedido_items (
+  id uuid primary key default gen_random_uuid(),
+  pedido_id uuid not null references public.pedidos(id) on delete cascade,
+  producto_id uuid not null references public.catalogo_productos(id),
+  sku text not null,
+  nombre text not null,
+  tipo_precio text not null,
+  cantidad integer not null check (cantidad > 0),
+  unidades_stock integer not null check (unidades_stock > 0),
+  precio_unitario numeric(12,2) not null check (precio_unitario >= 0),
+  subtotal numeric(12,2) not null check (subtotal >= 0)
+);
+
+create index if not exists pedidos_estado_created_idx on public.pedidos(estado, created_at desc);
+create index if not exists pedido_items_pedido_idx on public.pedido_items(pedido_id);
+alter table public.pedidos enable row level security;
+alter table public.pedido_items enable row level security;
+
+drop policy if exists "admins leen pedidos" on public.pedidos;
+create policy "admins leen pedidos" on public.pedidos for select to authenticated
+using (public.is_admin());
+drop policy if exists "admins leen items" on public.pedido_items;
+create policy "admins leen items" on public.pedido_items for select to authenticated
+using (public.is_admin());
+
+create or replace function public.crear_pedido(
+  p_cliente_nombre text,
+  p_telefono text,
+  p_ciudad text,
+  p_notas text,
+  p_items jsonb
+)
+returns table (pedido_id uuid, pedido_codigo text, pedido_total numeric)
+language plpgsql security definer set search_path = public as $$
+declare
+  v_pedido_id uuid;
+  v_codigo text;
+  v_total numeric(12,2) := 0;
+  v_item jsonb;
+  v_producto public.catalogo_productos%rowtype;
+  v_precio jsonb;
+  v_tipo text;
+  v_cantidad integer;
+  v_factor integer;
+  v_unidades integer;
+  v_unitario numeric(12,2);
+  v_subtotal numeric(12,2);
+begin
+  if length(trim(coalesce(p_cliente_nombre,''))) < 2 then raise exception 'Ingresa tu nombre'; end if;
+  if length(trim(coalesce(p_telefono,''))) < 6 then raise exception 'Ingresa un teléfono válido'; end if;
+  if p_items is null or jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
+    raise exception 'El pedido está vacío';
+  end if;
+
+  insert into public.pedidos(cliente_nombre,telefono,ciudad,notas)
+  values (trim(p_cliente_nombre),trim(p_telefono),trim(coalesce(p_ciudad,'')),trim(coalesce(p_notas,'')))
+  returning id,codigo into v_pedido_id,v_codigo;
+
+  for v_item in select value from jsonb_array_elements(p_items)
+  loop
+    v_tipo := trim(v_item->>'tipo');
+    v_cantidad := greatest(1,coalesce((v_item->>'cantidad')::integer,1));
+    select * into v_producto from public.catalogo_productos
+      where sku = trim(v_item->>'sku') and visible = true and estado <> 'oculto';
+    if not found then raise exception 'Producto no disponible: %', coalesce(v_item->>'sku','sin SKU'); end if;
+
+    select value into v_precio from jsonb_array_elements(v_producto.precios)
+      where lower(value->>'tipo') = lower(v_tipo) limit 1;
+    if v_precio is null then raise exception 'Precio no disponible para %', v_producto.sku; end if;
+
+    v_unitario := round(((v_precio->>'valor')::numeric * (1 - v_producto.descuento / 100))::numeric,2);
+    v_factor := case
+      when lower(v_tipo) = 'docena' then 12
+      when lower(v_tipo) = 'ciento' then 100
+      when lower(v_tipo) like 'caja%' or lower(v_tipo) like 'box%' or lower(v_tipo) in ('paquete','pack')
+        then greatest(1,coalesce((v_precio->>'unidades')::integer,(v_precio->>'cantidad')::integer,1))
+      else 1 end;
+    v_unidades := v_cantidad * v_factor;
+    if v_unidades > v_producto.stock then raise exception 'Stock insuficiente para %', v_producto.nombre; end if;
+    v_subtotal := round(v_unitario * v_cantidad,2);
+    v_total := v_total + v_subtotal;
+
+    insert into public.pedido_items(pedido_id,producto_id,sku,nombre,tipo_precio,cantidad,unidades_stock,precio_unitario,subtotal)
+    values(v_pedido_id,v_producto.id,v_producto.sku,v_producto.nombre,v_tipo,v_cantidad,v_unidades,v_unitario,v_subtotal);
+  end loop;
+
+  update public.pedidos set total=v_total,updated_at=now() where id=v_pedido_id;
+  return query select v_pedido_id,v_codigo,v_total;
+end $$;
+revoke all on function public.crear_pedido(text,text,text,text,jsonb) from public;
+grant execute on function public.crear_pedido(text,text,text,text,jsonb) to anon, authenticated;
+
+create or replace function public.cambiar_estado_pedido(p_pedido_id uuid,p_estado text)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  v_pedido public.pedidos%rowtype;
+  v_item public.pedido_items%rowtype;
+  v_rows integer;
+begin
+  if not public.is_admin() then raise exception 'No autorizado'; end if;
+  if p_estado not in ('nuevo','confirmado','enviado','entregado','cancelado') then raise exception 'Estado no válido'; end if;
+  select * into v_pedido from public.pedidos where id=p_pedido_id for update;
+  if not found then raise exception 'Pedido no encontrado'; end if;
+
+  if v_pedido.stock_aplicado and p_estado='nuevo' then
+    raise exception 'Un pedido confirmado no puede volver a Nuevo';
+  end if;
+
+  if not v_pedido.stock_aplicado and p_estado in ('confirmado','enviado','entregado') then
+    for v_item in select * from public.pedido_items where pedido_id=p_pedido_id loop
+      update public.catalogo_productos
+        set stock=stock-v_item.unidades_stock,
+            estado=case when stock-v_item.unidades_stock=0 then 'agotado' else estado end,
+            updated_at=now()
+        where id=v_item.producto_id and stock>=v_item.unidades_stock;
+      get diagnostics v_rows = row_count;
+      if v_rows=0 then raise exception 'Stock insuficiente para %', v_item.nombre; end if;
+    end loop;
+    v_pedido.stock_aplicado := true;
+  elsif v_pedido.stock_aplicado and p_estado='cancelado' then
+    for v_item in select * from public.pedido_items where pedido_id=p_pedido_id loop
+      update public.catalogo_productos
+        set stock=stock+v_item.unidades_stock,
+            estado=case when estado='agotado' and visible then 'disponible' else estado end,
+            updated_at=now()
+        where id=v_item.producto_id;
+    end loop;
+    v_pedido.stock_aplicado := false;
+  end if;
+
+  update public.pedidos set estado=p_estado,stock_aplicado=v_pedido.stock_aplicado,
+    confirmado_at=case when p_estado='confirmado' and confirmado_at is null then now() else confirmado_at end,
+    enviado_at=case when p_estado='enviado' and enviado_at is null then now() else enviado_at end,
+    entregado_at=case when p_estado='entregado' and entregado_at is null then now() else entregado_at end,
+    updated_at=now()
+  where id=p_pedido_id;
+end $$;
+revoke all on function public.cambiar_estado_pedido(uuid,text) from public;
+grant execute on function public.cambiar_estado_pedido(uuid,text) to authenticated;
+
 insert into storage.buckets (id,name,public,file_size_limit,allowed_mime_types)
 values ('productos','productos',true,5242880,array['image/jpeg','image/png','image/webp'])
 on conflict (id) do update set public=true,file_size_limit=5242880,allowed_mime_types=array['image/jpeg','image/png','image/webp'];

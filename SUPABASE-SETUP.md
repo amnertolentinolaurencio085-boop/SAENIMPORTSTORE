@@ -48,3 +48,17 @@ La migración aplica una reparación conservadora de mojibake (`MUÃ‘ECA` → 
 ## 5. GitHub Pages
 
 Haz commit y push de los archivos. GitHub Pages puede servir este panel porque toda la comunicación se hace directamente con Supabase usando la clave pública y RLS. Añade la URL publicada a **Authentication > URL Configuration > Site URL / Redirect URLs** si luego habilitas recuperación de contraseña.
+
+## 6. Pedidos y control de inventario
+
+Después de actualizar el proyecto, vuelve a ejecutar completo `supabase/schema.sql` en **SQL Editor**. El script es idempotente y añadirá las tablas `pedidos`, `pedido_items` y las funciones necesarias sin borrar productos.
+
+El flujo queda así:
+
+1. El cliente completa nombre y teléfono en **Mi Pedido**.
+2. Al pulsar **Enviar pedido por WhatsApp**, primero se registra el pedido con estado `nuevo` y después se abre WhatsApp con su código.
+3. En el panel, abre **Pedidos** y cambia el estado a `confirmado` cuando la venta sea aceptada.
+4. Supabase descuenta el stock una sola vez y marca como agotado cualquier producto que llegue a cero.
+5. `enviado` y `entregado` no vuelven a descontar. Si un pedido confirmado se marca `cancelado`, el stock se devuelve automáticamente.
+
+No cambies manualmente `stock_aplicado`: esa protección evita descuentos duplicados.

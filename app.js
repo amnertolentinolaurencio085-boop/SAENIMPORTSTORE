@@ -677,9 +677,31 @@ function shuffleArray(arr) {
 function initCart() {
   const saved = localStorage.getItem('saen_cart');
   if (saved) try { CART = JSON.parse(saved); } catch(_){}
+  initCheckoutFields();
   updateCartUI();
 }
 function saveCart() { localStorage.setItem('saen_cart', JSON.stringify(CART)); }
+
+function initCheckoutFields() {
+  const footer = document.querySelector('.cart-footer');
+  if (!footer || document.getElementById('orderCustomer')) return;
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('saen_customer') || '{}'); } catch (_) {}
+  footer.insertAdjacentHTML('afterbegin', `
+    <section class="order-customer" id="orderCustomer">
+      <h4><i class="fas fa-user"></i> Datos para registrar el pedido</h4>
+      <div class="order-customer-grid">
+        <label>Nombre *<input id="orderName" autocomplete="name" maxlength="100" placeholder="Nombre del cliente"></label>
+        <label>Teléfono *<input id="orderPhone" inputmode="tel" autocomplete="tel" maxlength="25" placeholder="987 654 321"></label>
+        <label class="span-2">Ciudad o distrito<input id="orderCity" autocomplete="address-level2" maxlength="80" placeholder="Huánuco"></label>
+        <label class="span-2">Nota opcional<textarea id="orderNotes" rows="2" maxlength="300" placeholder="Dirección, referencia o indicación"></textarea></label>
+      </div>
+      <p class="order-message" id="orderMessage" role="alert"></p>
+    </section>`);
+  document.getElementById('orderName').value = saved.nombre || '';
+  document.getElementById('orderPhone').value = saved.telefono || '';
+  document.getElementById('orderCity').value = saved.ciudad || '';
+}
 
 /* Toast de bienvenida si hay carrito guardado */
 function showCartWelcomeToast() {
@@ -934,9 +956,54 @@ function renderCartPanel() {
   if (total) total.textContent = `S/ ${sum.toFixed(2)}`;
 }
 
-function sendCartWA() {
+async function sendCartWA() {
   if (CART.length === 0) { showToast('Tu pedido está vacío'); return; }
-  let msg = '🛍️ *PEDIDO - SAEN IMPORT*\n\n';
+  const nombre = document.getElementById('orderName')?.value.trim() || '';
+  const telefono = document.getElementById('orderPhone')?.value.trim() || '';
+  const ciudad = document.getElementById('orderCity')?.value.trim() || '';
+  const notas = document.getElementById('orderNotes')?.value.trim() || '';
+  const orderMessage = document.getElementById('orderMessage');
+  if (nombre.length < 2 || telefono.replace(/\D/g,'').length < 6) {
+    if (orderMessage) orderMessage.textContent = 'Completa tu nombre y teléfono para continuar.';
+    document.getElementById(nombre.length < 2 ? 'orderName' : 'orderPhone')?.focus();
+    return;
+  }
+  const cfg = window.SAEN_SUPABASE || {};
+  if (!window.supabase || !cfg.url || !cfg.anonKey) {
+    if (orderMessage) orderMessage.textContent = 'No se pudo conectar para registrar el pedido. Inténtalo nuevamente.';
+    return;
+  }
+  localStorage.setItem('saen_customer', JSON.stringify({nombre,telefono,ciudad}));
+  if (orderMessage) orderMessage.textContent = 'Registrando pedido…';
+  const button = document.querySelector('.cart-footer .btn-wa-cart');
+  if (button) button.disabled = true;
+  const waWindow = window.open('', '_blank');
+  const orderClient = window.supabase.createClient(cfg.url, cfg.anonKey);
+  const rpcItems = CART.map(item => ({sku:item.pid,tipo:item.tipo,cantidad:item.qty}));
+  let order;
+  try {
+    const { data, error } = await orderClient.rpc('crear_pedido', {
+      p_cliente_nombre:nombre,
+      p_telefono:telefono,
+      p_ciudad:ciudad,
+      p_notas:notas,
+      p_items:rpcItems
+    });
+    if (error) throw error;
+    order = Array.isArray(data) ? data[0] : data;
+    if (!order?.pedido_codigo) throw new Error('No se recibió el código del pedido.');
+  } catch (error) {
+    if (waWindow) waWindow.close();
+    if (orderMessage) orderMessage.textContent = `No se registró el pedido: ${error.message}`;
+    if (button) button.disabled = false;
+    return;
+  }
+
+  let msg = `🛍️ *PEDIDO ${order.pedido_codigo} - SAEN IMPORT*\n\n`;
+  msg += `👤 *Cliente:* ${nombre}\n📱 *Teléfono:* ${telefono}\n`;
+  if (ciudad) msg += `📍 *Ciudad:* ${ciudad}\n`;
+  if (notas) msg += `📝 *Nota:* ${notas}\n`;
+  msg += '\n';
   let total = 0;
   CART.forEach(item => {
     const prod = DATA.productos.find(p => p.id === item.pid);
@@ -950,7 +1017,13 @@ function sendCartWA() {
   msg += `────────────────────\n*TOTAL: S/ ${total.toFixed(2)}*\n\n`;
   msg += `📍 ${DATA.empresa.direccion}\n`;
   msg += `⏰ ${DATA.empresa.horario}`;
-  window.open(`https://wa.me/${DATA.empresa.telefono1}?text=${encodeURIComponent(msg)}`, '_blank');
+  const waUrl = `https://wa.me/${DATA.empresa.telefono1}?text=${encodeURIComponent(msg)}`;
+  if (waWindow) waWindow.location.href = waUrl;
+  else window.location.href = waUrl;
+  CART = [];
+  saveCart(); updateCartUI(); renderCartPanel();
+  if (button) button.disabled = false;
+  showToast(`Pedido ${order.pedido_codigo} registrado correctamente`);
 }
 
 /* ══════════════════════════════════════════════════
