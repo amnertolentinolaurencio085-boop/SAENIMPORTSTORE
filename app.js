@@ -66,8 +66,8 @@ function getPriceCls(tipo) {
 /* ══════════════════════════════════════════════════
    BOOT
 ══════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', () => {
-  loadData();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadData();
   detectPage();
   initCart();
   initNav();
@@ -81,8 +81,27 @@ document.addEventListener('DOMContentLoaded', () => {
   showCartWelcomeToast();
 });
 
-function loadData() {
-  DATA = SAEN_DATA;
+async function loadData() {
+  DATA = window.SaenPublicData
+    ? await window.SaenPublicData.merge(SAEN_DATA)
+    : SAEN_DATA;
+  const repair = value => {
+    if (typeof value === 'string' && /Ã|Â|â€|â€”|â†/.test(value)) {
+      const known = {
+        'Ã‘':'Ñ','Ã±':'ñ','Ã':'Á','Ã¡':'á','Ã‰':'É','Ã©':'é',
+        'Ã':'Í','Ã­':'í','Ã“':'Ó','Ã³':'ó','Ãš':'Ú','Ãº':'ú',
+        'Â°':'°','â€”':'—','â€“':'–','â†’':'→'
+      };
+      let fixed = value;
+      Object.entries(known).forEach(([bad, good]) => { fixed = fixed.split(bad).join(good); });
+      try { return decodeURIComponent(escape(fixed)); } catch (_) { return fixed; }
+    }
+    if (Array.isArray(value)) return value.map(repair);
+    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k,v]) => [k, repair(v)]));
+    return value;
+  };
+  DATA = repair(DATA);
+  DATA.productos = DATA.productos.filter(p => p.estado !== 'oculto' && p.visible !== false);
 }
 
 function detectPage() {
