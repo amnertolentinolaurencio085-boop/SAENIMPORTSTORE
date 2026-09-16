@@ -15,6 +15,7 @@
     $('viewAllOrders').onclick = () => $('ordersLink').click();
     if (location.hash === '#products') $('productsLink').click();
     else if (location.hash === '#pedidos') $('ordersLink').click();
+    else if (location.hash === '#clientes') $('clientsLink').click();
     else showDashboard();
 
     if (demo) {
@@ -41,6 +42,7 @@
     $('dashboardMain').hidden = false;
     $('productsMain').hidden = true;
     $('ordersMain').hidden = true;
+    $('clientsMain').hidden = true;
     document.querySelectorAll('.sidebar nav a').forEach(item => item.classList.remove('active'));
     $('dashboardLink').classList.add('active');
     $('sidebar').classList.remove('open');

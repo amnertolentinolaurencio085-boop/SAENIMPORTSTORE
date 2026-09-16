@@ -21,7 +21,7 @@
   function bind() {
     $('logoutBtn').onclick = async () => { if (db) await db.auth.signOut(); location.replace('admin-login.html'); };
     $('menuBtn').onclick = () => $('sidebar').classList.toggle('open');
-    document.querySelectorAll('[data-section]:not(#ordersLink):not([data-section="Dashboard"])').forEach(a => a.onclick = e => { e.preventDefault(); toast(`${a.dataset.section}: módulo preparado para una siguiente etapa.`); });
+    document.querySelectorAll('[data-section]:not(#ordersLink):not(#clientsLink):not([data-section="Dashboard"])').forEach(a => a.onclick = e => { e.preventDefault(); toast(`${a.dataset.section}: módulo preparado para una siguiente etapa.`); });
     $('newBtn').onclick = () => { resetForm(); openDrawer(); }; $('closeDrawer').onclick = closeDrawer; $('cancelBtn').onclick = closeDrawer; $('drawerBackdrop').onclick = closeDrawer;
     $('search').oninput = filter; $('categoryFilter').onchange = filter; $('statusFilter').onchange = filter;
     $('addPrice').onclick = () => addPrice(); $('addVariant').onclick = () => addVariant(); $('productForm').onsubmit = saveProduct;

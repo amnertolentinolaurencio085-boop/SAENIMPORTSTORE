@@ -54,6 +54,7 @@
     $('dashboardMain').hidden = true;
     $('productsMain').hidden = true;
     $('ordersMain').hidden = false;
+    $('clientsMain').hidden = true;
     setActive($('ordersLink'));
     location.hash = 'pedidos';
     renderOrders();
@@ -62,6 +63,7 @@
   function showProducts() {
     $('dashboardMain').hidden = true;
     $('ordersMain').hidden = true;
+    $('clientsMain').hidden = true;
     $('productsMain').hidden = false;
     setActive($('productsLink'));
     history.replaceState(null,'',location.pathname + location.search + '#products');

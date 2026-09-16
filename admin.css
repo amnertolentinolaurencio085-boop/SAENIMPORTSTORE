@@ -92,3 +92,16 @@
 @media(max-width:1100px){.admin-page .dashboard-stats{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.admin-page .dashboard-grid{grid-template-columns:1fr}.admin-page .dashboard-stats{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){.admin-page .dashboard-stats{grid-template-columns:1fr}.admin-page .ranking-item{grid-template-columns:30px minmax(0,1fr)}.admin-page .ranking-item p{grid-column:2;text-align:left}}
+
+/* Clientes */
+.admin-page .clients-main{min-height:calc(100vh - 88px)}
+.admin-page .clients-toolbar{grid-template-columns:minmax(0,1.6fr) minmax(220px,.7fr)}
+.admin-page .clients-table{min-width:900px}
+.admin-page .client-cell{display:flex;align-items:center;gap:12px}
+.admin-page .client-cell>span{width:42px;height:42px;display:grid;place-items:center;flex:0 0 auto;border-radius:50%;background:linear-gradient(145deg,#0d70c5,#073c75);border:1px solid #168adf;color:#fff;font-weight:800;box-shadow:0 7px 18px rgba(0,90,170,.24)}
+.admin-page .client-cell strong,.admin-page .client-cell small{display:block}
+.admin-page .client-cell small{margin-top:4px;color:#8fb7da;font-size:10px}
+.admin-page .client-cell .client-tag{color:#ffc65b}
+.admin-page .client-phone{display:inline-flex;align-items:center;gap:7px;color:#56e5a6;text-decoration:none;font-weight:700}
+.admin-page .client-phone:hover{text-decoration:underline}
+@media(max-width:760px){.admin-page .clients-toolbar{display:flex;flex-direction:column}.admin-page .clients-toolbar>*{width:100%}}
