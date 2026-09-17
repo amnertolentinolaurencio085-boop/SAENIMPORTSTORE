@@ -34,8 +34,10 @@
     setBusy(registerForm,false);
     if (error) return show('registerMessage',friendly(error.message));
     if (data.session) return location.replace('mi-cuenta.html');
-    registerForm.reset();
-    show('registerMessage','Cuenta creada. Revisa tu correo y confirma el enlace para ingresar.','success');
+    if (data.user?.identities?.length === 0) {
+      return show('registerMessage','Este correo ya tiene una cuenta. Prueba iniciar sesión.');
+    }
+    show('registerMessage','No se pudo iniciar la sesión. Inténtalo nuevamente.');
   };
 
   function switchForm(mode) {
@@ -47,5 +49,11 @@
   function value(id){return document.getElementById(id).value.trim();}
   function show(id,message,type=''){const el=document.getElementById(id);if(el){el.textContent=message;el.className=`auth-message ${type}`;}}
   function setBusy(form,busy){form.querySelector('button[type="submit"]').disabled=busy;}
-  function friendly(message){if(message.includes('already registered'))return 'Este correo ya tiene una cuenta.';if(message.includes('Password'))return 'La contraseña debe tener al menos 8 caracteres.';return message;}
+  function friendly(message){
+    const normalized=String(message || '').toLowerCase();
+    if (normalized.includes('already registered')) return 'Este correo ya tiene una cuenta. Prueba iniciar sesión.';
+    if (normalized.includes('password')) return 'La contraseña debe tener al menos 8 caracteres.';
+    if (normalized.includes('rate limit') || normalized.includes('over_email_send_rate_limit')) return 'Hubo demasiados intentos. Espera unos minutos e inténtalo nuevamente.';
+    return 'No se pudo crear la cuenta. Inténtalo nuevamente.';
+  }
 })();
