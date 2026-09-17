@@ -8,6 +8,7 @@
   let orders = [];
   let products = [];
   let metrics = [];
+  let customerProfiles = [];
 
   async function bootDashboard() {
     $('dashboardLink').onclick = event => { event.preventDefault(); showDashboard(); loadDashboard(); };
@@ -30,6 +31,7 @@
         {sku:'JUG001',consultas:62,whatsapp_clicks:11},
         {sku:'MAQ010',consultas:47,whatsapp_clicks:9}
       ];
+      customerProfiles = [{user_id:'demo-1'},{user_id:'demo-2'}];
       renderDashboard();
       return;
     }
@@ -52,17 +54,19 @@
   async function loadDashboard() {
     if (demo) { renderDashboard(); return; }
     $('refreshDashboard').disabled = true;
-    const [ordersResult,productsResult,metricsResult] = await Promise.all([
+    const [ordersResult,productsResult,metricsResult,profilesResult] = await Promise.all([
       db.from('pedidos').select('id,codigo,cliente_nombre,telefono,total,estado,created_at').order('created_at',{ascending:false}),
       db.from('catalogo_productos').select('sku,nombre,stock,estado,imagen_principal'),
-      db.from('producto_metricas').select('sku,consultas,whatsapp_clicks').order('consultas',{ascending:false}).limit(10)
+      db.from('producto_metricas').select('sku,consultas,whatsapp_clicks').order('consultas',{ascending:false}).limit(10),
+      db.from('cliente_perfiles').select('user_id')
     ]);
     $('refreshDashboard').disabled = false;
-    const error = ordersResult.error || productsResult.error || metricsResult.error;
+    const error = ordersResult.error || productsResult.error || metricsResult.error || profilesResult.error;
     if (error) return dashboardError(`No se pudo cargar el dashboard: ${error.message}`);
     orders = ordersResult.data || [];
     products = productsResult.data || [];
     metrics = metricsResult.data || [];
+    customerProfiles = profilesResult.data || [];
     renderDashboard();
   }
 
@@ -70,12 +74,11 @@
     const validSales = orders.filter(order => ['confirmado','enviado','entregado'].includes(order.estado));
     const today = new Date();
     const todayOrders = orders.filter(order => sameDay(new Date(order.created_at),today));
-    const phones = new Set(orders.map(order => normalizePhone(order.telefono)).filter(Boolean));
     $('dashboardSales').textContent = money(validSales.reduce((sum,order) => sum + Number(order.total),0));
     $('dashboardToday').textContent = todayOrders.length;
     $('dashboardTodaySales').textContent = `${money(todayOrders.reduce((sum,order) => sum + Number(order.total),0))} en pedidos`;
     $('dashboardOut').textContent = products.filter(product => product.stock <= 0 || product.estado === 'agotado').length;
-    $('dashboardClients').textContent = phones.size;
+    $('dashboardClients').textContent = customerProfiles.length;
     renderTopProducts();
     renderFrequentClients();
     renderRecentOrders();

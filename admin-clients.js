@@ -6,6 +6,7 @@
     : null;
   const $ = id => document.getElementById(id);
   let orders = [];
+  let profiles = [];
   let clients = [];
 
   async function bootClients() {
@@ -45,44 +46,70 @@
     if (demo) { buildClients(); return; }
     if (!db) return notify('Supabase no está configurado.');
     $('refreshClients').disabled = true;
-    const { data, error } = await db.from('pedidos')
-      .select('id,cliente_nombre,telefono,ciudad,total,estado,created_at')
-      .order('created_at', { ascending:false });
+    const [profilesResult,ordersResult] = await Promise.all([
+      db.from('cliente_perfiles').select('user_id,nombre,telefono,ciudad,created_at,updated_at').order('created_at',{ascending:false}),
+      db.from('pedidos').select('id,cliente_user_id,cliente_nombre,telefono,ciudad,total,estado,created_at').order('created_at',{ascending:false})
+    ]);
     $('refreshClients').disabled = false;
+    const error = profilesResult.error || ordersResult.error;
     if (error) return notify(`No se pudieron cargar los clientes: ${error.message}`);
-    orders = data || [];
+    profiles = profilesResult.data || [];
+    orders = ordersResult.data || [];
     buildClients();
   }
 
   function buildClients() {
     const grouped = new Map();
+    const phoneToKey = new Map();
+    profiles.forEach(profile => {
+      const key = `user:${profile.user_id}`;
+      const registeredAt = new Date(profile.created_at);
+      grouped.set(key, {
+        userId: profile.user_id,
+        nombre: profile.nombre || 'Cliente',
+        telefono: profile.telefono || '',
+        ciudad: profile.ciudad || '',
+        pedidos: 0,
+        total: 0,
+        registeredAt,
+        primeraCompra: null,
+        ultimaCompra: null
+      });
+      const phone = normalizePhone(profile.telefono);
+      if (phone) phoneToKey.set(phone,key);
+    });
     orders.forEach(order => {
-      const key = normalizePhone(order.telefono);
-      if (!key) return;
+      const phone = normalizePhone(order.telefono);
+      const key = order.cliente_user_id ? `user:${order.cliente_user_id}` : phoneToKey.get(phone) || `phone:${phone}`;
+      if (!order.cliente_user_id && !phone) return;
       const date = new Date(order.created_at);
       const current = grouped.get(key) || {
+        userId: order.cliente_user_id || null,
         nombre: order.cliente_nombre || 'Cliente',
-        telefono: order.telefono || key,
+        telefono: order.telefono || phone,
         ciudad: order.ciudad || '',
         pedidos: 0,
         total: 0,
+        registeredAt: null,
         primeraCompra: date,
         ultimaCompra: date
       };
-      if (date > current.ultimaCompra) {
+      if (!current.ultimaCompra || date > current.ultimaCompra) {
         current.ultimaCompra = date;
-        current.nombre = order.cliente_nombre || current.nombre;
-        current.telefono = order.telefono || current.telefono;
-        current.ciudad = order.ciudad || current.ciudad;
+        if (!current.userId) {
+          current.nombre = order.cliente_nombre || current.nombre;
+          current.telefono = order.telefono || current.telefono;
+          current.ciudad = order.ciudad || current.ciudad;
+        }
       }
-      if (date < current.primeraCompra) current.primeraCompra = date;
+      if (!current.primeraCompra || date < current.primeraCompra) current.primeraCompra = date;
       if (order.estado !== 'cancelado') {
         current.pedidos += 1;
         current.total += Number(order.total || 0);
       }
       grouped.set(key, current);
     });
-    clients = [...grouped.values()].sort((a,b) => b.ultimaCompra - a.ultimaCompra);
+    clients = [...grouped.values()].sort((a,b) => clientDate(b) - clientDate(a));
     renderClients();
   }
 
@@ -91,25 +118,25 @@
     const filter = $('clientFilter').value;
     const filtered = clients.filter(client => {
       const matches = !query || `${client.nombre} ${client.telefono} ${client.ciudad}`.toLowerCase().includes(query);
-      const segment = !filter || (filter === 'frecuente' && client.pedidos >= 2) || (filter === 'nuevo' && isCurrentMonth(client.primeraCompra));
+      const segment = !filter || (filter === 'frecuente' && client.pedidos >= 2) || (filter === 'nuevo' && isCurrentMonth(client.registeredAt || client.primeraCompra));
       return matches && segment;
     });
 
     $('clientsTotal').textContent = clients.length;
-    $('clientsNew').textContent = clients.filter(client => isCurrentMonth(client.primeraCompra)).length;
+    $('clientsNew').textContent = clients.filter(client => isCurrentMonth(client.registeredAt || client.primeraCompra)).length;
     $('clientsFrequent').textContent = clients.filter(client => client.pedidos >= 2).length;
     $('clientsResultCount').textContent = `${filtered.length} cliente${filtered.length === 1 ? '' : 's'}`;
     $('clientsEmpty').hidden = filtered.length > 0;
     $('clientRows').innerHTML = filtered.map(client => {
-      const frequent = client.pedidos >= 2 ? '<small class="client-tag"><i class="fas fa-star"></i> Frecuente</small>' : '<small>Registrado por pedido</small>';
+      const frequent = client.pedidos >= 2 ? '<small class="client-tag"><i class="fas fa-star"></i> Frecuente</small>' : client.userId ? '<small>Cuenta registrada</small>' : '<small>Registrado por pedido</small>';
       const wa = whatsappPhone(client.telefono);
       return `<tr>
         <td><div class="client-cell"><span>${escapeHtml(initials(client.nombre))}</span><div><strong>${escapeHtml(client.nombre)}</strong>${frequent}</div></div></td>
-        <td><a class="client-phone" href="https://wa.me/${wa}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> ${escapeHtml(client.telefono)}</a></td>
+        <td>${wa ? `<a class="client-phone" href="https://wa.me/${wa}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> ${escapeHtml(client.telefono)}</a>` : '<span>Sin teléfono</span>'}</td>
         <td>${escapeHtml(client.ciudad || 'Sin ciudad')}</td>
         <td><strong>${client.pedidos}</strong></td>
         <td><strong>${money(client.total)}</strong></td>
-        <td>${formatDate(client.ultimaCompra)}</td>
+        <td>${client.ultimaCompra ? formatDate(client.ultimaCompra) : 'Sin compras'}</td>
       </tr>`;
     }).join('');
   }
@@ -123,7 +150,8 @@
     ];
   }
 
-  function isCurrentMonth(date) { const now=new Date(); return date.getFullYear()===now.getFullYear() && date.getMonth()===now.getMonth(); }
+  function isCurrentMonth(date) { if (!date || Number.isNaN(date.getTime())) return false; const now=new Date(); return date.getFullYear()===now.getFullYear() && date.getMonth()===now.getMonth(); }
+  function clientDate(client) { return client.ultimaCompra || client.registeredAt || new Date(0); }
   function normalizePhone(value) { return String(value || '').replace(/\D/g, ''); }
   function whatsappPhone(value) { const phone=normalizePhone(value); return phone.length===9 ? `51${phone}` : phone; }
   function initials(value) { return String(value || 'C').trim().split(/\s+/).slice(0,2).map(part => part[0]).join('').toUpperCase(); }
