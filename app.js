@@ -119,6 +119,7 @@ function detectPage() {
 ══════════════════════════════════════════════════ */
 function renderIndexPage() {
   buildHeroSlider();
+  buildFeaturedHome();
   buildCategoriesGrid();
   const allSec = document.getElementById('allSections');
   if (allSec) allSec.style.display = 'none';
@@ -684,6 +685,22 @@ function initCart() {
   if (saved) try { CART = JSON.parse(saved); } catch(_){}
   initCheckoutFields();
   updateCartUI();
+}
+
+function buildFeaturedHome() {
+  const grid = document.getElementById('featuredProductsGrid');
+  if (!grid) return;
+
+  const disponibles = DATA.productos.filter(p => p.estado !== 'agotado');
+  const destacados = [
+    ...disponibles.filter(p => ['NUEVO', 'HOT', 'OFERTA', 'VIRAL'].includes(p.badge)),
+    ...disponibles
+  ].filter((producto, indice, lista) =>
+    lista.findIndex(item => item.id === producto.id) === indice
+  ).slice(0, 6);
+
+  grid.innerHTML = destacados.map(buildCard).join('');
+  bindCardEvents();
 }
 function saveCart() { localStorage.setItem('saen_cart', JSON.stringify(CART)); }
 
@@ -1292,7 +1309,10 @@ function buildNavWithArrows() {
   /* Auto-scroll al ítem activo */
   setTimeout(() => {
     const activeLink = ul.querySelector('.active-nav');
-    if (activeLink) activeLink.scrollIntoView({ inline:'center', behavior:'smooth' });
+    if (activeLink) {
+      const targetLeft = activeLink.offsetLeft - (inner.clientWidth - activeLink.clientWidth) / 2;
+      inner.scrollTo({ left: Math.max(0, targetLeft), behavior:'smooth' });
+    }
   }, 300);
 
   /* Mobile menu */
@@ -1436,52 +1456,3 @@ document.addEventListener('keydown', e => {
     document.getElementById('searchResults')?.classList.remove('active');
   }
 });
-/* =========================
-   MODO OSCURO
-========================= */
-
-function applySavedTheme() {
-  const savedTheme = localStorage.getItem("saenTheme");
-  const darkIcon = document.getElementById("darkIcon");
-
-  if (savedTheme === "dark") {
-    document.body.classList.add("dark-mode");
-
-    if (darkIcon) {
-      darkIcon.classList.remove("fa-moon");
-      darkIcon.classList.add("fa-sun");
-    }
-  } else {
-    document.body.classList.remove("dark-mode");
-
-    if (darkIcon) {
-      darkIcon.classList.remove("fa-sun");
-      darkIcon.classList.add("fa-moon");
-    }
-  }
-}
-
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
-
-  const isDark = document.body.classList.contains("dark-mode");
-  const darkIcon = document.getElementById("darkIcon");
-
-  if (isDark) {
-    localStorage.setItem("saenTheme", "dark");
-
-    if (darkIcon) {
-      darkIcon.classList.remove("fa-moon");
-      darkIcon.classList.add("fa-sun");
-    }
-  } else {
-    localStorage.setItem("saenTheme", "light");
-
-    if (darkIcon) {
-      darkIcon.classList.remove("fa-sun");
-      darkIcon.classList.add("fa-moon");
-    }
-  }
-}
-
-document.addEventListener("DOMContentLoaded", applySavedTheme);
