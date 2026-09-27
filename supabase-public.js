@@ -4,6 +4,8 @@
   const client = configured && window.supabase ? window.supabase.createClient(cfg.url, cfg.anonKey) : null;
 
   function normalize(row) {
+    const physicalStock = Number(row.stock || 0);
+    const reservedStock = Number(row.stock_reservado || 0);
     return {
       id: row.sku,
       categoria: row.categoria,
@@ -16,7 +18,9 @@
       descuento: Number(row.descuento || 0),
       estrellas: Number(row.estrellas || 0),
       resenas: Number(row.resenas || 0),
-      stock: Number(row.stock || 0),
+      stock: Math.max(0, physicalStock - reservedStock),
+      stock_fisico: physicalStock,
+      stock_reservado: reservedStock,
       unidad_medida: row.unidad_medida || 'unidad',
       variantes: row.variantes || [],
       precios: row.precios || []

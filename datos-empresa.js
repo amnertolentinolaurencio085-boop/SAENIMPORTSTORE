@@ -21,7 +21,7 @@ const SAEN_EMPRESA = {
       "nombre": "Accesorios y Joyas",
       "icono": "fas fa-gem",
       "color": "purple",
-      "banner": "IMAGENES CARRUSEL/IMGACC01.png",
+      "banner": "IMAGENES CARRUSEL/IMGACC01.webp",
       "descripcion": "Ganchos, peines, aretes y más"
     },
     {
@@ -29,7 +29,7 @@ const SAEN_EMPRESA = {
       "nombre": "Cuidado Personal",
       "icono": "fas fa-spa",
       "color": "green",
-      "banner": "IMAGENES CARRUSEL/IMGCUI01.png",
+      "banner": "IMAGENES CARRUSEL/IMGCUI01.webp",
       "descripcion": "Bloqueador, perfumes, stickers"
     },
     {
@@ -37,7 +37,7 @@ const SAEN_EMPRESA = {
       "nombre": "Higiene y Limpieza",
       "icono": "fas fa-soap",
       "color": "blue",
-      "banner": "IMAGENES CARRUSEL/IMGHIG01.png",
+      "banner": "IMAGENES CARRUSEL/IMGHIG01.webp",
       "descripcion": "Cepillos, pasta, toallitas"
     },
     {
@@ -45,7 +45,7 @@ const SAEN_EMPRESA = {
       "nombre": "Mochilas y Carteras",
       "icono": "fas fa-shopping-bag",
       "color": "orange",
-      "banner": "IMAGENES CARRUSEL/IMGMOC01.png",
+      "banner": "IMAGENES CARRUSEL/IMGMOC01.webp",
       "descripcion": "Fashion bags, morrales, carteras"
     },
     {
@@ -53,7 +53,7 @@ const SAEN_EMPRESA = {
       "nombre": "Novedades",
       "icono": "fas fa-star",
       "color": "red",
-      "banner": "IMAGENES CARRUSEL/IMGNOV01.png",
+      "banner": "IMAGENES CARRUSEL/IMGNOV01.webp",
       "descripcion": "Medias, parches, mascarillas"
     },
     {
@@ -61,7 +61,7 @@ const SAEN_EMPRESA = {
       "nombre": "Utensilios de Cocina",
       "icono": "fas fa-utensils",
       "color": "amber",
-      "banner": "IMAGENES CARRUSEL/IMGCOC01.png",
+      "banner": "IMAGENES CARRUSEL/IMGCOC01.webp",
       "descripcion": "Rayador, sartén, tazas"
     },
     {
@@ -69,7 +69,7 @@ const SAEN_EMPRESA = {
       "nombre": "Juguetes",
       "icono": "fas fa-gamepad",
       "color": "pink",
-      "banner": "IMAGENES CARRUSEL/IMGJUG01.png",
+      "banner": "IMAGENES CARRUSEL/IMGJUG01.webp",
       "descripcion": "Burbuja, Lego, Dog Funny"
     },
     {
@@ -77,7 +77,7 @@ const SAEN_EMPRESA = {
       "nombre": "Escolar",
       "icono": "fas fa-book",
       "color": "indigo",
-      "banner": "IMAGENES CARRUSEL/IMGESC01.png",
+      "banner": "IMAGENES CARRUSEL/IMGESC01.webp",
       "descripcion": "Lapiceros, masita, escarapelas"
     },
     {
@@ -85,7 +85,7 @@ const SAEN_EMPRESA = {
       "nombre": "Maquillaje",
       "icono": "fas fa-paint-brush",
       "color": "rose",
-      "banner": "IMAGENES CARRUSEL/IMGMAQ01.png",
+      "banner": "IMAGENES CARRUSEL/IMGMAQ01.webp",
       "descripcion": "Brochas, rimel, lipgloss"
     },
     {
@@ -93,7 +93,7 @@ const SAEN_EMPRESA = {
       "nombre": "Perfumes y Colonias",
       "icono": "fas fa-spray-can-sparkles",
       "color": "teal",
-      "banner": "IMAGENES CARRUSEL/IMGPER01.png",
+      "banner": "IMAGENES CARRUSEL/IMGPER01.webp",
       "descripcion": "Fragancias árabes, colonias, kits"
     }
   ]

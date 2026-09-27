@@ -103,7 +103,7 @@
       return (!query || haystack.includes(query)) && (!status || order.estado === status);
     });
     $('newOrdersCount').textContent = orders.filter(order => order.estado === 'nuevo').length;
-    $('processOrdersCount').textContent = orders.filter(order => ['confirmado','enviado'].includes(order.estado)).length;
+    $('processOrdersCount').textContent = orders.filter(order => ['pago_pendiente','confirmado','enviado'].includes(order.estado)).length;
     $('deliveredOrdersCount').textContent = orders.filter(order => order.estado === 'entregado').length;
     $('ordersResultCount').textContent = `${filtered.length} pedido${filtered.length === 1 ? '' : 's'}`;
     $('ordersEmpty').hidden = filtered.length > 0;
@@ -112,13 +112,13 @@
       const summary = items.slice(0,2).map(item => `${escapeHtml(item.nombre)} ×${item.cantidad}`).join('<br>');
       const more = items.length > 2 ? `<small>+${items.length-2} producto${items.length-2===1?'':'s'}</small>` : '';
       return `<tr>
-        <td><strong>${escapeHtml(order.codigo)}</strong>${order.stock_aplicado?'<small class="stock-deducted"><i class="fas fa-check"></i> Stock descontado</small>':''}</td>
+        <td><strong>${escapeHtml(order.codigo)}</strong>${order.stock_aplicado?'<small class="stock-deducted"><i class="fas fa-check"></i> Stock descontado</small>':order.stock_reservado?'<small class="stock-reserved"><i class="fas fa-clock"></i> Stock reservado</small>':''}</td>
         <td><strong>${escapeHtml(order.cliente_nombre)}</strong><small>${escapeHtml(order.telefono)}</small><small>${escapeHtml(order.ciudad||'')}</small></td>
         <td class="order-products">${summary}${more}</td>
         <td><strong>S/ ${Number(order.total).toFixed(2)}</strong></td>
         <td>${formatDate(order.created_at)}</td>
         <td><select class="order-status status-${order.estado}" data-order-id="${order.id}" data-current="${order.estado}">
-          ${['nuevo','confirmado','enviado','entregado','cancelado'].map(value => `<option value="${value}" ${value===order.estado?'selected':''}>${title(value)}</option>`).join('')}
+          ${['nuevo','pago_pendiente','confirmado','enviado','entregado','cancelado'].map(value => `<option value="${value}" ${value===order.estado?'selected':''}>${title(value)}</option>`).join('')}
         </select></td>
       </tr>`;
     }).join('');
@@ -134,7 +134,11 @@
       select.value = previous;
       return notify('Vista previa: configura Supabase para cambiar pedidos.');
     }
-    if (next === 'confirmado' && !order.stock_aplicado && !confirm('Al confirmar se descontará el stock de este pedido. ¿Continuar?')) {
+    if (next === 'pago_pendiente' && !order.stock_reservado && !confirm('Se reservarán las unidades mientras se confirma el pago. ¿Continuar?')) {
+      select.value = previous;
+      return;
+    }
+    if (next === 'confirmado' && !order.stock_aplicado && !confirm('El pago quedará confirmado y se descontará el stock. ¿Continuar?')) {
       select.value = previous;
       return;
     }
@@ -149,7 +153,7 @@
       select.value = previous;
       return notify(error.message);
     }
-    if ((!order.stock_aplicado && ['confirmado','enviado','entregado'].includes(next)) || (order.stock_aplicado && next === 'cancelado')) stockChanged = true;
+    if ((!order.stock_aplicado && ['pago_pendiente','confirmado','enviado','entregado'].includes(next)) || ((order.stock_aplicado||order.stock_reservado) && next === 'cancelado')) stockChanged = true;
     notify(`Pedido ${order.codigo}: ${title(next)}.`);
     await loadOrders();
   }
@@ -160,7 +164,7 @@
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'),3500);
   }
-  function title(value) { return value.charAt(0).toUpperCase() + value.slice(1); }
+  function title(value) { const text=String(value||'').replace('_',' '); return text.charAt(0).toUpperCase() + text.slice(1); }
   function formatDate(value) { return new Intl.DateTimeFormat('es-PE',{dateStyle:'short',timeStyle:'short'}).format(new Date(value)); }
   function escapeHtml(value) { const node=document.createElement('div'); node.textContent=value??''; return node.innerHTML; }
 

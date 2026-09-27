@@ -325,6 +325,12 @@ body.storefront-preview .qv-stars span,
 body.storefront-preview .qv-sugg-count { color: var(--preview-muted); }
 body.storefront-preview .qv-sugg-card { background: #0a294f; border-color: var(--preview-line); }
 body.storefront-preview .qv-close { background: #0d3768; color: #fff; }
+body.storefront-preview .qv-gallery{background:#051a37;border-color:var(--preview-line)}
+body.storefront-preview .qv-gallery button{background:#0b315e}
+body.storefront-preview .qv-gallery button.active{border-color:var(--preview-blue-light)}
+body.storefront-preview .qv-variants{background:#082447;border-color:var(--preview-line)}
+body.storefront-preview .qv-variants>strong{color:#fff}
+body.storefront-preview .qv-variants span{background:#0d3d74;color:#d9efff}
 
 @media (max-width: 1250px) {
   .featured-products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }

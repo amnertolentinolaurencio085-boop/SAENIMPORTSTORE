@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   detectPage();
   initCart();
   await initCustomerAccount();
+  trackPageVisit();
   initNav();
   initSearch();
   initScroll();
@@ -338,7 +339,8 @@ function buildPriceRowsHtml(p, descuento, agotado) {
 ══════════════════════════════════════════════════ */
 function buildCard(p) {
   const color   = CAT_COLOR[p.categoria] || 'blue';
-  const agotado = p.estado === 'agotado';
+  const agotado = p.estado === 'agotado' || Number(p.stock) <= 0;
+  const stockBajo = !agotado && Number(p.stock) <= 5;
   const descuento = p.descuento > 0;
 
   let badgeHtml = '';
@@ -399,6 +401,7 @@ function buildCard(p) {
 
     ${badgeHtml}
     ${discBadge}
+    ${stockBajo ? `<div class="p-stock-warning"><i class="fas fa-fire"></i> Últimas ${p.stock} unidades</div>` : ''}
 
     <div class="p-img-wrap" role="button" tabindex="0" aria-label="Ver ${p.nombre}"
          onclick="openQuickView('${p.id}')"
@@ -523,7 +526,8 @@ function renderQuickView(p) {
 
   const color     = CAT_COLOR[p.categoria] || 'blue';
   const cat       = DATA.categorias.find(c => c.id === p.categoria);
-  const agotado   = p.estado === 'agotado';
+  const agotado   = p.estado === 'agotado' || Number(p.stock) <= 0;
+  const stockBajo = !agotado && Number(p.stock) <= 5;
   const descuento = p.descuento > 0;
 
   let imgHtml = '';
@@ -549,26 +553,32 @@ function renderQuickView(p) {
     ? `<div class="agotado-ribbon"><span><i class="fas fa-ban"></i> AGOTADO</span></div>`
     : '';
 
-  const suggestions = getSuggestions(p, 40);
+  const suggestions = getSuggestions(p, 12);
+  const gallery = [p.imagen, ...(Array.isArray(p.galeria) ? p.galeria : [])].filter(Boolean);
+  const variants = Array.isArray(p.variantes) ? p.variantes.filter(v => v && (v.valor || v.nombre)) : [];
 
   const tieneImagen = !!(p.imagen && p.imagen.trim() !== '');
   const nombreEsc    = p.nombre.replace(/'/g, "\\'");
 
   content.innerHTML = `
     <div class="qv-main">
+      <div class="qv-media">
       <div class="qv-img-wrap bg-${color} ${tieneImagen ? 'qv-img-zoomable' : ''}"
-           ${tieneImagen ? `onclick="openImageLightbox('${p.imagen}','${nombreEsc}')" role="button" tabindex="0" aria-label="Ver imagen completa"
-           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openImageLightbox('${p.imagen}','${nombreEsc}');}"` : ''}>
+           ${tieneImagen ? `onclick="openImageLightbox(document.getElementById('qvMainImage').src,'${nombreEsc}')" role="button" tabindex="0" aria-label="Ver imagen completa"` : ''}>
         ${badgeHtml}${discBadge}
-        ${imgHtml}
+        ${tieneImagen ? `<img id="qvMainImage" src="${p.imagen}" alt="${p.nombre}" loading="eager">` : imgHtml}
         ${agotadoOverlay}
         ${tieneImagen ? `<span class="qv-zoom-hint"><i class="fas fa-magnifying-glass-plus"></i> Ver imagen</span>` : ''}
+      </div>
+      ${gallery.length > 1 ? `<div class="qv-gallery">${gallery.map((src,index) => `<button type="button" class="${index===0?'active':''}" data-qv-image="${src}" onclick="selectQuickImage(this)"><img src="${src}" alt="Vista ${index+1} de ${p.nombre}" loading="lazy"></button>`).join('')}</div>` : ''}
       </div>
       <div class="qv-info">
         <span class="qv-cat">${cat ? cat.nombre : ''}</span>
         <h2 class="qv-name">${p.nombre}</h2>
         <div class="qv-stars">${stars}<span>(${p.resenas.toLocaleString()} reseñas)</span></div>
         <p class="qv-desc">${p.descripcion}</p>
+        ${stockBajo ? `<p class="qv-stock-warning"><i class="fas fa-fire"></i> ¡Últimas ${p.stock} unidades disponibles!</p>` : ''}
+        ${variants.length ? `<div class="qv-variants"><strong>Variantes disponibles</strong><div>${variants.map(v => `<span>${v.tipo ? `${v.tipo}: ` : ''}${v.valor || v.nombre}${v.stock != null ? ` (${v.stock})` : ''}</span>`).join('')}</div></div>` : ''}
         <div class="qv-prices">${buildPriceRowsHtml(p, descuento, agotado)}</div>
         <button class="btn-wa-cart" onclick="consultWA('${p.id}')">
           <i class="fab fa-whatsapp"></i> Consultar por WhatsApp
@@ -685,6 +695,13 @@ function initCart() {
   if (saved) try { CART = JSON.parse(saved); } catch(_){}
   initCheckoutFields();
   updateCartUI();
+}
+
+function selectQuickImage(button) {
+  const image = document.getElementById('qvMainImage');
+  if (!image || !button?.dataset.qvImage) return;
+  image.src = button.dataset.qvImage;
+  button.parentElement?.querySelectorAll('button').forEach(item => item.classList.toggle('active', item === button));
 }
 
 function buildFeaturedHome() {
@@ -1443,6 +1460,14 @@ function trackProductInterest(sku, type) {
   ANALYTICS_CLIENT ||= window.supabase.createClient(cfg.url, cfg.anonKey);
   ANALYTICS_CLIENT.rpc('registrar_consulta',{p_sku:sku,p_tipo:type})
     .then(({error}) => { if (error) console.debug('Métrica no registrada:', error.message); });
+}
+function trackPageVisit() {
+  const cfg = window.SAEN_SUPABASE || {};
+  if (!window.supabase || !cfg.url || !cfg.anonKey) return;
+  ANALYTICS_CLIENT ||= window.supabase.createClient(cfg.url, cfg.anonKey);
+  const page = PAGE_CAT || (location.pathname.split('/').pop() || 'index').replace(/\.html$/,'') || 'index';
+  ANALYTICS_CLIENT.rpc('registrar_visita',{p_pagina:page})
+    .then(({error}) => { if (error) console.debug('Visita no registrada:', error.message); });
 }
 function showToast(html) {
   const t = document.getElementById('toast');

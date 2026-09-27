@@ -93,6 +93,18 @@
 @media(max-width:760px){.admin-page .dashboard-grid{grid-template-columns:1fr}.admin-page .dashboard-stats{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){.admin-page .dashboard-stats{grid-template-columns:1fr}.admin-page .ranking-item{grid-template-columns:30px minmax(0,1fr)}.admin-page .ranking-item p{grid-column:2;text-align:left}}
 
+/* Pedidos, reservas y notificaciones */
+.admin-page .top-header{overflow:visible}
+.admin-page .order-status.status-pago_pendiente{background:#fff3d8;color:#8a5700;border-color:#e8c777}
+.admin-page .stock-reserved{display:block;margin-top:5px;color:#e5b23c!important;font-size:10px;font-weight:750}
+.admin-page .notification>button{border:0;background:transparent;color:inherit;font-size:inherit;padding:8px;cursor:pointer}
+.admin-page .notification-panel{position:absolute;z-index:80;right:-70px;top:48px;width:min(390px,calc(100vw - 28px));max-height:520px;overflow:auto;border:1px solid #0f548a;border-radius:14px;background:#031b37;box-shadow:0 24px 60px rgba(0,0,0,.45);font-size:12px}
+.admin-page .notification-panel[hidden]{display:none}.admin-page .notification-panel>header{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#05284e;border-bottom:1px solid #0c4675;color:#fff}.admin-page .notification-panel>header button{color:#71c5ff;font-size:10px}
+.admin-page #notificationList>p{padding:28px;text-align:center;color:#91b8da}.admin-page #notificationList article{display:flex;gap:11px;padding:13px 15px;border-bottom:1px solid #0a3b66;color:#b8d7f2}.admin-page #notificationList article.unread{background:rgba(10,110,194,.16)}.admin-page #notificationList article>i{width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#0d477a;color:#69c4ff}.admin-page #notificationList article.stock-alert>i{background:#5b4013;color:#ffd56c}.admin-page #notificationList strong,.admin-page #notificationList span,.admin-page #notificationList small{display:block}.admin-page #notificationList strong{color:#fff;margin-bottom:4px}.admin-page #notificationList small{color:#709bc0;margin-top:5px}
+.admin-page .dashboard-stats{grid-template-columns:repeat(5,minmax(0,1fr))}.admin-page .dash-icon.visits{background:#114a67;color:#62dcff}
+@media(max-width:1250px){.admin-page .dashboard-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.admin-page .notification-panel{position:fixed;top:78px;right:14px}.admin-page .dashboard-stats{grid-template-columns:1fr 1fr}}
+
 /* Clientes */
 .admin-page .clients-main{min-height:calc(100vh - 88px)}
 .admin-page .clients-toolbar{grid-template-columns:minmax(0,1.6fr) minmax(220px,.7fr)}

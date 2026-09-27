@@ -9,6 +9,7 @@
   let products = [];
   let metrics = [];
   let customerProfiles = [];
+  let visitsToday = 0;
 
   async function bootDashboard() {
     $('dashboardLink').onclick = event => { event.preventDefault(); showDashboard(); loadDashboard(); };
@@ -32,6 +33,7 @@
         {sku:'MAQ010',consultas:47,whatsapp_clicks:9}
       ];
       customerProfiles = [{user_id:'demo-1'},{user_id:'demo-2'}];
+      visitsToday = 128;
       renderDashboard();
       return;
     }
@@ -54,11 +56,13 @@
   async function loadDashboard() {
     if (demo) { renderDashboard(); return; }
     $('refreshDashboard').disabled = true;
-    const [ordersResult,productsResult,metricsResult,profilesResult] = await Promise.all([
+    const todayKey = new Date().toLocaleDateString('en-CA',{timeZone:'America/Lima'});
+    const [ordersResult,productsResult,metricsResult,profilesResult,visitsResult] = await Promise.all([
       db.from('pedidos').select('id,codigo,cliente_nombre,telefono,total,estado,created_at').order('created_at',{ascending:false}),
       db.from('catalogo_productos').select('sku,nombre,stock,estado,imagen_principal'),
       db.from('producto_metricas').select('sku,consultas,whatsapp_clicks').order('consultas',{ascending:false}).limit(10),
-      db.from('cliente_perfiles').select('user_id')
+      db.from('cliente_perfiles').select('user_id'),
+      db.from('sitio_metricas').select('visitas').eq('fecha',todayKey)
     ]);
     $('refreshDashboard').disabled = false;
     const error = ordersResult.error || productsResult.error || metricsResult.error || profilesResult.error;
@@ -67,6 +71,7 @@
     products = productsResult.data || [];
     metrics = metricsResult.data || [];
     customerProfiles = profilesResult.data || [];
+    visitsToday = (visitsResult.data || []).reduce((sum,row) => sum + Number(row.visitas||0),0);
     renderDashboard();
   }
 
@@ -79,6 +84,7 @@
     $('dashboardTodaySales').textContent = `${money(todayOrders.reduce((sum,order) => sum + Number(order.total),0))} en pedidos`;
     $('dashboardOut').textContent = products.filter(product => product.stock <= 0 || product.estado === 'agotado').length;
     $('dashboardClients').textContent = customerProfiles.length;
+    $('dashboardVisits').textContent = visitsToday.toLocaleString('es-PE');
     renderTopProducts();
     renderFrequentClients();
     renderRecentOrders();
@@ -125,7 +131,7 @@
   function sameDay(a,b) { return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
   function normalizePhone(value) { return String(value||'').replace(/\D/g,''); }
   function money(value) { return `S/ ${Number(value||0).toFixed(2)}`; }
-  function title(value) { return value.charAt(0).toUpperCase()+value.slice(1); }
+  function title(value) { const text=String(value||'').replace('_',' '); return text.charAt(0).toUpperCase()+text.slice(1); }
   function formatDate(value) { return new Intl.DateTimeFormat('es-PE',{dateStyle:'short',timeStyle:'short'}).format(new Date(value)); }
   function escapeHtml(value) { const node=document.createElement('div'); node.textContent=value??''; return node.innerHTML; }
 
