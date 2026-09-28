@@ -20,7 +20,20 @@
   }
   function bind() {
     $('logoutBtn').onclick = async () => { if (db) await db.auth.signOut(); location.replace('admin-login.html'); };
-    $('menuBtn').onclick = () => $('sidebar').classList.toggle('open');
+    const setMenuOpen = open => {
+      $('sidebar').classList.toggle('open', open);
+      $('sidebarBackdrop').classList.toggle('open', open);
+      $('sidebarBackdrop').setAttribute('aria-hidden', String(!open));
+      $('menuBtn').setAttribute('aria-expanded', String(open));
+      document.body.classList.toggle('admin-menu-open', open);
+    };
+    window.closeAdminMenu = () => setMenuOpen(false);
+    $('menuBtn').setAttribute('aria-expanded', 'false');
+    $('menuBtn').onclick = () => setMenuOpen(!$('sidebar').classList.contains('open'));
+    $('sidebarBackdrop').onclick = window.closeAdminMenu;
+    $('sidebar').querySelectorAll('a,button').forEach(item => item.addEventListener('click', window.closeAdminMenu));
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') window.closeAdminMenu(); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 900) window.closeAdminMenu(); });
     document.querySelectorAll('[data-section]:not(#ordersLink):not(#clientsLink):not([data-section="Dashboard"])').forEach(a => a.onclick = e => { e.preventDefault(); toast(`${a.dataset.section}: módulo preparado para una siguiente etapa.`); });
     $('newBtn').onclick = () => { resetForm(); openDrawer(); }; $('closeDrawer').onclick = closeDrawer; $('cancelBtn').onclick = closeDrawer; $('drawerBackdrop').onclick = closeDrawer;
     $('search').oninput = filter; $('categoryFilter').onchange = filter; $('statusFilter').onchange = filter;

@@ -117,3 +117,12 @@
 .admin-page .client-phone{display:inline-flex;align-items:center;gap:7px;color:#56e5a6;text-decoration:none;font-weight:700}
 .admin-page .client-phone:hover{text-decoration:underline}
 @media(max-width:760px){.admin-page .clients-toolbar{display:flex;flex-direction:column}.admin-page .clients-toolbar>*{width:100%}}
+
+/* Cierre del menú móvil al tocar fuera */
+.admin-page .sidebar-backdrop{display:none}
+@media(max-width:900px){
+  .admin-page.admin-menu-open{overflow:hidden}
+  .admin-page .sidebar{z-index:21}
+  .admin-page .sidebar-backdrop{display:block;position:fixed;inset:0;z-index:20;border:0;padding:0;background:rgba(0,8,22,.64);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s ease}
+  .admin-page .sidebar-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
+}
