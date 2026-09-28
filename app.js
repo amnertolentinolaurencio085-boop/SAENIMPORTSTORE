@@ -354,7 +354,7 @@ function buildCard(p) {
 
   let imgHtml = '';
   if (p.imagen && p.imagen.trim() !== '') {
-    imgHtml = `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy"/>`;
+    imgHtml = `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy" onerror="handleProductImageError(this)"/>`;
   } else {
     const cat = DATA.categorias.find(c => c.id === p.categoria);
     imgHtml = `<i class="${cat ? cat.icono : 'fas fa-box'}"></i>`;
@@ -520,6 +520,21 @@ function closeQuickView() {
   document.body.style.overflow = '';
 }
 
+function handleProductImageError(img) {
+  if (!img || img.dataset.fallbackApplied === '1') return;
+  img.dataset.fallbackApplied = '1';
+  img.style.display = 'none';
+  const holder = img.parentElement;
+  if (!holder) return;
+  holder.classList.add('no-img');
+  if (!holder.querySelector('.product-image-fallback')) {
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-box-open product-image-fallback';
+    icon.setAttribute('aria-label', 'Imagen próximamente');
+    holder.appendChild(icon);
+  }
+}
+
 function renderQuickView(p) {
   const content = document.getElementById('qvContent');
   if (!content) return;
@@ -532,7 +547,7 @@ function renderQuickView(p) {
 
   let imgHtml = '';
   if (p.imagen && p.imagen.trim() !== '') {
-    imgHtml = `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy"/>`;
+    imgHtml = `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy" onerror="handleProductImageError(this)"/>`;
   } else {
     imgHtml = `<i class="${cat ? cat.icono : 'fas fa-box'}"></i>`;
   }
@@ -566,11 +581,11 @@ function renderQuickView(p) {
       <div class="qv-img-wrap bg-${color} ${tieneImagen ? 'qv-img-zoomable' : ''}"
            ${tieneImagen ? `onclick="openImageLightbox(document.getElementById('qvMainImage').src,'${nombreEsc}')" role="button" tabindex="0" aria-label="Ver imagen completa"` : ''}>
         ${badgeHtml}${discBadge}
-        ${tieneImagen ? `<img id="qvMainImage" src="${p.imagen}" alt="${p.nombre}" loading="eager">` : imgHtml}
+        ${tieneImagen ? `<img id="qvMainImage" src="${p.imagen}" alt="${p.nombre}" loading="eager" onerror="handleProductImageError(this)">` : imgHtml}
         ${agotadoOverlay}
         ${tieneImagen ? `<span class="qv-zoom-hint"><i class="fas fa-magnifying-glass-plus"></i> Ver imagen</span>` : ''}
       </div>
-      ${gallery.length > 1 ? `<div class="qv-gallery">${gallery.map((src,index) => `<button type="button" class="${index===0?'active':''}" data-qv-image="${src}" onclick="selectQuickImage(this)"><img src="${src}" alt="Vista ${index+1} de ${p.nombre}" loading="lazy"></button>`).join('')}</div>` : ''}
+      ${gallery.length > 1 ? `<div class="qv-gallery">${gallery.map((src,index) => `<button type="button" class="${index===0?'active':''}" data-qv-image="${src}" onclick="selectQuickImage(this)"><img src="${src}" alt="Vista ${index+1} de ${p.nombre}" loading="lazy" onerror="handleProductImageError(this)"></button>`).join('')}</div>` : ''}
       </div>
       <div class="qv-info">
         <span class="qv-cat">${cat ? cat.nombre : ''}</span>
@@ -606,7 +621,7 @@ function suggCardHtml(p) {
 
   let imgHtml = '';
   if (p.imagen && p.imagen.trim() !== '') {
-    imgHtml = `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy"/>`;
+    imgHtml = `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy" onerror="handleProductImageError(this)"/>`;
   } else {
     imgHtml = `<i class="${cat ? cat.icono : 'fas fa-box'}"></i>`;
   }
@@ -990,7 +1005,7 @@ function renderCartPanel() {
     const subtotal = item.precio * item.qty;
     sum += subtotal;
     const imgEl = prod.imagen
-      ? `<img src="${prod.imagen}" alt="${prod.nombre}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);">`
+      ? `<img src="${prod.imagen}" alt="${prod.nombre}" onerror="handleProductImageError(this)" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);">`
       : `<i class="${cat?.icono || 'fas fa-box'}"></i>`;
     return `
       <div class="cart-item">
