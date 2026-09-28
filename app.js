@@ -16,6 +16,8 @@
 let DATA     = null;
 let CART     = [];
 let PAGE_CAT = null;
+let IS_PRODUCT_PAGE = false;
+let CATEGORY_PRODUCTS = [];
 let ANALYTICS_CLIENT = null;
 let CUSTOMER_CLIENT = null;
 const TRACKED_PRODUCT_VIEWS = new Set();
@@ -80,8 +82,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   initScroll();
   initQuickView();
   initImageLightbox();
-  if (PAGE_CAT) renderCategoryPage();
-  else          renderIndexPage();
+  initTrustLinks();
+  if (IS_PRODUCT_PAGE) renderProductPage();
+  else if (PAGE_CAT)   renderCategoryPage();
+  else                 renderIndexPage();
   initRevealObserver();
   showCartWelcomeToast();
 });
@@ -111,6 +115,7 @@ async function loadData() {
 
 function detectPage() {
   const path = window.location.pathname.split('/').pop();
+  IS_PRODUCT_PAGE = path === 'producto.html';
   const match = DATA.categorias.find(c => c.id + '.html' === path);
   PAGE_CAT = match ? match.id : null;
 }
@@ -133,6 +138,85 @@ function renderIndexPage() {
 function hideReviewsSection() {
   const rs = document.getElementById('reviewsSection');
   if (rs) rs.style.display = 'none';
+}
+
+function renderProductPage() {
+  const container = document.getElementById('productDetail');
+  if (!container) return;
+  const sku = new URLSearchParams(location.search).get('sku') || '';
+  const product = DATA.productos.find(item => item.id.toLowerCase() === sku.toLowerCase());
+  if (!product) {
+    container.innerHTML = '<div class="product-not-found"><i class="fas fa-box-open"></i><h1>Producto no encontrado</h1><p>Puede que ya no esté disponible o que el enlace sea incorrecto.</p><a href="index.html">Volver a la tienda</a></div>';
+    return;
+  }
+  const category = DATA.categorias.find(item => item.id === product.categoria);
+  const soldOut = product.estado === 'agotado' || Number(product.stock) <= 0;
+  const lowStock = !soldOut && Number(product.stock) <= 5;
+  const images = [product.imagen, ...(Array.isArray(product.galeria) ? product.galeria : [])].filter(Boolean);
+  const variants = Array.isArray(product.variantes) ? product.variantes.filter(item => item?.valor || item?.nombre) : [];
+  const canonical = `https://saenimport.com/producto.html?sku=${encodeURIComponent(product.id)}`;
+  document.title = `${product.nombre} | SAEN IMPORT`;
+  setPageMeta('description', product.descripcion || `${product.nombre} disponible en SAEN IMPORT.`);
+  setPageMeta('og:title', `${product.nombre} | SAEN IMPORT`, 'property');
+  setPageMeta('og:description', product.descripcion || 'Consulta precio unitario y mayorista.', 'property');
+  setPageMeta('og:image', new URL(product.imagen, location.href).href, 'property');
+  let canonicalLink = document.querySelector('link[rel="canonical"]');
+  if (!canonicalLink) { canonicalLink = document.createElement('link'); canonicalLink.rel = 'canonical'; document.head.appendChild(canonicalLink); }
+  canonicalLink.href = canonical;
+  container.innerHTML = `
+    <nav class="product-breadcrumb"><a href="index.html">Inicio</a><i class="fas fa-chevron-right"></i><a href="${product.categoria}.html">${category?.nombre || product.categoria}</a><i class="fas fa-chevron-right"></i><span>${product.nombre}</span></nav>
+    <article class="product-detail-card">
+      <section class="product-detail-media">
+        <div class="product-detail-main bg-${CAT_COLOR[product.categoria] || 'blue'}"><img id="productPageImage" src="${product.imagen}" alt="${product.nombre}" onerror="handleProductImageError(this)">${soldOut ? '<span class="product-detail-sold">AGOTADO</span>' : ''}</div>
+        ${images.length > 1 ? `<div class="product-detail-gallery">${images.map((src,index) => `<button class="${index===0?'active':''}" onclick="selectProductPageImage(this,'${src}')"><img src="${src}" alt="Vista ${index+1}" onerror="handleProductImageError(this)"></button>`).join('')}</div>` : ''}
+      </section>
+      <section class="product-detail-info">
+        <span class="product-detail-category">${category?.nombre || ''}</span><small>SKU: ${product.id}</small>
+        <h1>${product.nombre}</h1>
+        <p>${product.descripcion || 'Producto disponible con precio unitario y mayorista.'}</p>
+        ${lowStock ? `<div class="product-detail-low"><i class="fas fa-fire"></i> Últimas ${product.stock} unidades disponibles</div>` : ''}
+        ${variants.length ? `<div class="product-detail-variants"><strong>Variantes</strong><div>${variants.map(item => `<span>${item.tipo ? item.tipo + ': ' : ''}${item.valor || item.nombre}</span>`).join('')}</div></div>` : ''}
+        <div class="product-detail-prices">${buildPriceRowsHtml(product, Number(product.descuento) > 0, soldOut)}</div>
+        <div class="product-detail-actions"><button onclick="consultWA('${product.id}')"><i class="fab fa-whatsapp"></i> Consultar</button><button class="share-product" onclick="shareProduct('${product.id}')"><i class="fas fa-share-nodes"></i> Compartir</button></div>
+        <ul class="product-detail-trust"><li><i class="fas fa-box"></i> Precio mayorista desde 3 unidades</li><li><i class="fas fa-truck-fast"></i> Envíos coordinados a todo el Perú</li><li><i class="fas fa-shield-halved"></i> Pedido registrado con código de seguimiento</li></ul>
+      </section>
+    </article>
+    <section class="product-related"><header><span>También te puede interesar</span><h2>Productos relacionados</h2></header><div class="products-grid">${getSuggestions(product,4).map(buildCard).join('')}</div></section>`;
+  bindCardEvents();
+  trackProductInterest(product.id, 'vista');
+  const structured = document.createElement('script');
+  structured.type = 'application/ld+json';
+  structured.textContent = JSON.stringify({'@context':'https://schema.org','@type':'Product',name:product.nombre,sku:product.id,image:images.map(src=>new URL(src,location.href).href),description:product.descripcion||product.nombre,offers:{'@type':'Offer',priceCurrency:'PEN',price:productBasePrice(product).toFixed(2),availability:soldOut?'https://schema.org/OutOfStock':'https://schema.org/InStock',url:canonical}});
+  document.head.appendChild(structured);
+}
+
+function setPageMeta(name, content, attribute = 'name') {
+  let meta = document.head.querySelector(`meta[${attribute}="${name}"]`);
+  if (!meta) { meta = document.createElement('meta'); meta.setAttribute(attribute, name); document.head.appendChild(meta); }
+  meta.content = content;
+}
+
+function selectProductPageImage(button, src) {
+  const image = document.getElementById('productPageImage');
+  if (image) image.src = src;
+  button.parentElement?.querySelectorAll('button').forEach(item => item.classList.toggle('active', item === button));
+}
+
+async function shareProduct(pid) {
+  const product = DATA.productos.find(item => item.id === pid);
+  if (!product) return;
+  const url = `https://saenimport.com/producto.html?sku=${encodeURIComponent(product.id)}`;
+  if (navigator.share) {
+    try { await navigator.share({title:product.nombre,text:`Mira ${product.nombre} en SAEN IMPORT`,url}); return; } catch (_) {}
+  }
+  try { await navigator.clipboard.writeText(url); showToast('Enlace del producto copiado'); }
+  catch (_) { window.open(`https://wa.me/?text=${encodeURIComponent(product.nombre + ' ' + url)}`, '_blank'); }
+}
+
+function initTrustLinks() {
+  const footerBottom = document.querySelector('.footer-bottom');
+  if (!footerBottom || document.querySelector('.footer-trust-links')) return;
+  footerBottom.insertAdjacentHTML('beforebegin','<nav class="footer-trust-links" aria-label="Información de compra"><a href="informacion.html#envios">Envíos</a><a href="informacion.html#cambios">Cambios</a><a href="informacion.html#pagos">Medios de pago</a><a href="informacion.html#privacidad">Privacidad</a><a href="informacion.html#preguntas">Preguntas frecuentes</a></nav>');
 }
 
 /* ── Hero Slider ── */
@@ -201,6 +285,7 @@ function buildCategoriesGrid() {
 function renderCategoryPage() {
   const cat   = DATA.categorias.find(c => c.id === PAGE_CAT);
   const prods = DATA.productos.filter(p => p.categoria === PAGE_CAT);
+  CATEGORY_PRODUCTS = prods;
   const sec   = document.getElementById('catSection');
   if (!sec || !cat) return;
 
@@ -222,7 +307,7 @@ function renderCategoryPage() {
   insertQuickFilters(prods, sec);
 
   const grid = sec.querySelector('.products-grid');
-  if (grid) { grid.innerHTML = prods.map(p => buildCard(p)).join(''); bindCardEvents(); }
+  if (grid) applyCatalogFilters();
 
   const ctaEl = sec.querySelector('.sec-cta a');
   if (ctaEl) {
@@ -253,23 +338,15 @@ function insertBreadcrumb(cat) {
 /* ── Filtros rápidos ── */
 function insertQuickFilters(prods, sec) {
   if (document.getElementById('quickFilters')) return;
-  const badges = [...new Set(prods.filter(p => p.badge).map(p => p.badge))];
-  if (!badges.length) return;
-
   const wrap = document.createElement('div');
   wrap.id = 'quickFilters';
-  wrap.className = 'quick-filters';
+  wrap.className = 'catalog-tools';
   wrap.innerHTML = `
-    <button class="qf-btn active" onclick="filterCards('all', this)">
-      <i class="fas fa-border-all"></i> Todos
-    </button>
-    ${badges.map(b => `
-      <button class="qf-btn qf-${b.toLowerCase()}" onclick="filterCards('${b}', this)">
-        ${badgeIcon(b)} ${b}
-      </button>`).join('')}
-    <button class="qf-btn" onclick="filterCards('disponible', this)">
-      <i class="fas fa-check-circle"></i> Disponibles
-    </button>`;
+    <label class="catalog-search"><i class="fas fa-magnifying-glass"></i><input id="catalogSearch" type="search" placeholder="Buscar en esta categoría" oninput="applyCatalogFilters()"></label>
+    <label><span>Mostrar</span><select id="catalogStatus" onchange="applyCatalogFilters()"><option value="all">Todos</option><option value="disponible">Disponibles</option><option value="agotado">Agotados</option><option value="nuevo">Novedades</option><option value="oferta">Ofertas</option></select></label>
+    <label><span>Precio</span><select id="catalogPrice" onchange="applyCatalogFilters()"><option value="all">Cualquier precio</option><option value="0-10">Hasta S/ 10</option><option value="10-30">S/ 10 a S/ 30</option><option value="30+">Más de S/ 30</option></select></label>
+    <label><span>Ordenar</span><select id="catalogSort" onchange="applyCatalogFilters()"><option value="default">Destacados</option><option value="price-asc">Menor precio</option><option value="price-desc">Mayor precio</option><option value="name">Nombre A–Z</option></select></label>
+    <strong id="catalogResults">${prods.length} productos</strong>`;
 
   const secHdr = sec.querySelector('.sec-hdr');
   if (secHdr) secHdr.after(wrap);
@@ -339,8 +416,9 @@ function buildPriceRowsHtml(p, descuento, agotado) {
 ══════════════════════════════════════════════════ */
 function buildCard(p) {
   const color   = CAT_COLOR[p.categoria] || 'blue';
-  const agotado = p.estado === 'agotado' || Number(p.stock) <= 0;
-  const stockBajo = !agotado && Number(p.stock) <= 5;
+  const tieneStock = p.stock !== null && p.stock !== undefined && p.stock !== '' && Number.isFinite(Number(p.stock));
+  const agotado = p.estado === 'agotado' || (tieneStock && Number(p.stock) <= 0);
+  const stockBajo = tieneStock && !agotado && Number(p.stock) <= 5;
   const descuento = p.descuento > 0;
 
   let badgeHtml = '';
@@ -429,6 +507,7 @@ function buildCard(p) {
         <span class="p-selected-price" id="sp-${p.id}" style="font-size:.78rem;color:var(--gray);">
           Elige un tipo de precio arriba
         </span>
+        <a class="btn-product-link" href="producto.html?sku=${encodeURIComponent(p.id)}" onclick="event.stopPropagation()" aria-label="Abrir ficha de ${p.nombre}"><i class="fas fa-arrow-up-right-from-square"></i> Ver ficha</a>
       </div>
     </div>
   </div>`;
@@ -520,6 +599,45 @@ function closeQuickView() {
   document.body.style.overflow = '';
 }
 
+function productBasePrice(product) {
+  const unit = product.precios?.find(price => price.tipo === 'Unidad') || product.precios?.[0];
+  if (!unit) return 0;
+  return Number(unit.valor || 0) * (1 - Number(product.descuento || 0) / 100);
+}
+
+function applyCatalogFilters() {
+  const grid = document.querySelector('#catSection .products-grid');
+  if (!grid) return;
+  const query = (document.getElementById('catalogSearch')?.value || '').trim().toLowerCase();
+  const status = document.getElementById('catalogStatus')?.value || 'all';
+  const price = document.getElementById('catalogPrice')?.value || 'all';
+  const sort = document.getElementById('catalogSort')?.value || 'default';
+  let products = CATEGORY_PRODUCTS.filter(product => {
+    const basePrice = productBasePrice(product);
+    const matchesText = !query || `${product.nombre} ${product.id} ${product.descripcion || ''}`.toLowerCase().includes(query);
+    const matchesStatus = status === 'all' ||
+      (status === 'disponible' && product.estado !== 'agotado' && Number(product.stock || 1) > 0) ||
+      (status === 'agotado' && (product.estado === 'agotado' || Number(product.stock) <= 0)) ||
+      (status === 'nuevo' && String(product.badge || '').toLowerCase() === 'nuevo') ||
+      (status === 'oferta' && (String(product.badge || '').toLowerCase() === 'oferta' || Number(product.descuento) > 0));
+    const matchesPrice = price === 'all' || (price === '0-10' && basePrice <= 10) ||
+      (price === '10-30' && basePrice > 10 && basePrice <= 30) || (price === '30+' && basePrice > 30);
+    return matchesText && matchesStatus && matchesPrice;
+  });
+  if (sort === 'price-asc') products.sort((a,b) => productBasePrice(a) - productBasePrice(b));
+  if (sort === 'price-desc') products.sort((a,b) => productBasePrice(b) - productBasePrice(a));
+  if (sort === 'name') products.sort((a,b) => a.nombre.localeCompare(b.nombre, 'es'));
+  grid.innerHTML = products.length ? products.map(buildCard).join('') : '<div class="catalog-empty"><i class="fas fa-box-open"></i><p>No encontramos productos con esos filtros.</p><button onclick="resetCatalogFilters()">Limpiar filtros</button></div>';
+  const results = document.getElementById('catalogResults');
+  if (results) results.textContent = `${products.length} producto${products.length === 1 ? '' : 's'}`;
+  bindCardEvents();
+}
+
+function resetCatalogFilters() {
+  ['catalogSearch','catalogStatus','catalogPrice','catalogSort'].forEach(id => { const element = document.getElementById(id); if (element) element.value = id === 'catalogSearch' ? '' : (id === 'catalogSort' ? 'default' : 'all'); });
+  applyCatalogFilters();
+}
+
 function handleProductImageError(img) {
   if (!img || img.dataset.fallbackApplied === '1') return;
   img.dataset.fallbackApplied = '1';
@@ -541,8 +659,9 @@ function renderQuickView(p) {
 
   const color     = CAT_COLOR[p.categoria] || 'blue';
   const cat       = DATA.categorias.find(c => c.id === p.categoria);
-  const agotado   = p.estado === 'agotado' || Number(p.stock) <= 0;
-  const stockBajo = !agotado && Number(p.stock) <= 5;
+  const tieneStock = p.stock !== null && p.stock !== undefined && p.stock !== '' && Number.isFinite(Number(p.stock));
+  const agotado   = p.estado === 'agotado' || (tieneStock && Number(p.stock) <= 0);
+  const stockBajo = tieneStock && !agotado && Number(p.stock) <= 5;
   const descuento = p.descuento > 0;
 
   let imgHtml = '';
@@ -598,6 +717,7 @@ function renderQuickView(p) {
         <button class="btn-wa-cart" onclick="consultWA('${p.id}')">
           <i class="fab fa-whatsapp"></i> Consultar por WhatsApp
         </button>
+        <a class="qv-detail-link" href="producto.html?sku=${encodeURIComponent(p.id)}"><i class="fas fa-link"></i> Abrir ficha para compartir</a>
       </div>
     </div>
     ${suggestions.length ? `
@@ -708,8 +828,31 @@ function shuffleArray(arr) {
 function initCart() {
   const saved = localStorage.getItem('saen_cart');
   if (saved) try { CART = JSON.parse(saved); } catch(_){}
+  if (!Array.isArray(CART)) CART = [];
+  CART = CART.map(item => {
+    const product = DATA.productos.find(p => p.id === item.pid);
+    const price = product?.precios?.find(p => p.tipo === item.tipo)?.valor;
+    return {
+      ...item,
+      qty: Math.max(1, Number(item.qty || item.cantidad || 1)),
+      precio: Number.isFinite(Number(item.precio)) ? Number(item.precio) : Number(price || item.precio_unitario || 0)
+    };
+  }).filter(item => item.pid && item.tipo);
+  saveCart();
+  ensureMobileCartBar();
   initCheckoutFields();
   updateCartUI();
+}
+
+function ensureMobileCartBar() {
+  if (document.getElementById('mobileCartBar')) return;
+  const bar = document.createElement('button');
+  bar.id = 'mobileCartBar';
+  bar.className = 'mobile-cart-bar';
+  bar.type = 'button';
+  bar.onclick = openCart;
+  bar.innerHTML = '<span><i class="fas fa-bag-shopping"></i><b id="mobileCartCount">0</b> productos</span><strong id="mobileCartTotal">S/ 0.00</strong><em>Finalizar pedido <i class="fas fa-arrow-right"></i></em>';
+  document.body.appendChild(bar);
 }
 
 function selectQuickImage(button) {
@@ -965,10 +1108,18 @@ function clearCart() {
 }
 function updateCartUI() {
   const total = CART.reduce((s, i) => s + i.qty, 0);
+  const amount = CART.reduce((sum, item) => sum + Number(item.precio || 0) * Number(item.qty || 0), 0);
   document.querySelectorAll('.cart-count').forEach(el => {
     el.textContent = total;
     el.style.display = total > 0 ? 'flex' : 'none';
   });
+  const mobileBar = document.getElementById('mobileCartBar');
+  if (mobileBar) {
+    document.getElementById('mobileCartCount').textContent = total;
+    document.getElementById('mobileCartTotal').textContent = `S/ ${amount.toFixed(2)}`;
+    mobileBar.classList.toggle('visible', total > 0);
+    document.body.classList.toggle('has-mobile-cart', total > 0);
+  }
 }
 function openCart() {
   renderCartPanel();

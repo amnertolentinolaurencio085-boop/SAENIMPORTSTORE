@@ -137,7 +137,7 @@ const PRODS_MOCHILAS = [
     "categoria": "mochilas",
     "nombre": "MOCHILA OFICIO 3D LUCES",
     "descripcion": "IMAGEN REFERENCIAL",
-    "imagen": "IMAGENES MOCHILAS/IMGMOC008.png",
+    "imagen": "IMAGENES MOCHILAS/IMGMOC008.webp",
     "badge": "Nuevo",
     "estado": "agotado",
     "descuento": 0,
